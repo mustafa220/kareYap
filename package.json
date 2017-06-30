@@ -17,7 +17,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "any"
+    "test": "node kare.js"
   },
   "keywords": [
     "kare"
