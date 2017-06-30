@@ -24,5 +24,8 @@
     "kare"
   ],
   "author": "Mustafa Çolakoğlu",
-  "license": "ISC"
+  "license": "ISC",
+  "engines": {
+    "node": "6.9.5"
+  },
 }
