@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Kare Yapmaca</title>
+	<link rel="stylesheet" href="/css/reset.css" />
+	<link rel="stylesheet" href="/css/style.css" />
+	<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+	<script type="text/javascript" src="/js/jquery.js"></script>
+	<script type="text/javascript" src="/js/use.js"></script>
+</head>
+<body>
+	<div class="main">
+		<div class="board">
+			<div class="sira" style="width:100%;height:20%;text-align:center;background:yellow;color:#e36125"></div>
+			<div class="user1" style="width:100%;height:40%;text-align:center;background:#cc0033;color:#ddd"></div>
+			<div class="user2" style="width:100%;height:40%;text-align:center;background:#0066cc;color:#ddd"></div>
+		</div>
+		<div class="game">
+			
+		</div>
+		<div class="ad">
+			Reklam Alanı
+		</div>
+		<div class="firstLogin">
+			<input type="text" name="username" class="inputUserName" placeholder="Kullanıcı Adını Gir" />
+			<button class="loginButton">Login</button>
+		</div>
+		<div class="gameOver">
+			
+		</div>
+		<div class="anaMenu">
+			<div class="showUserName"></div>
+			<div class="arkadasinlaOyna">Arkadaşınla Oyna</div>
+			<div class="rastgeleOyna">Rastgele Oyna</div>
+		</div>
+		<div class="anaMenu arkadasinlaOynaMenu">
+			<span>Oluştur butonuna tıkla ve bir oyun oluştur. Bu kodu arkadaşına gönder ve eğlen! </span>
+			<input type="text" class="createdCode" value="" />
+			<span>Karenin bir kenarı kaç birim olsun ? <select name="birim1" class="birim1">
+				<option value="3">3</option>
+				<option value="5">5</option>
+				<option value="7">7</option>
+				<option value="11">11</option>
+				<option value="13">13</option>
+				<option value="15">15</option>
+			</select></span>
+			<button class="arkadasinlaOynaYeniOlustur">Oluştur</button>
+			<h3>Veya</h3>
+			<input type="text" class="loginGameCode" placeholder="Kodunu Gir" value="" />
+			<button class="arkadasinlaOynaYeniOyunaKatil">Bir Oyuna Katıl</button>
+		</div>
+	</div>
+</body>
+</html>
