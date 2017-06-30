@@ -31,6 +31,14 @@
 	background:#c00 !important;
 	z-index:30;
 }
+.lineOver{
+	background:#c00;
+	z-index:30;
+}
+.lineOut{
+	background:#ddd;
+	z-index:10;
+}
 .main{
 	width:100%;
 	height:100%;

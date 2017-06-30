@@ -129,6 +129,8 @@ var bl = function(){
 		var gameWidth = 0;
 		var gameHeight = 0;
 		var append = "";
+		var topBoxesWidth = 0;
+		var topBoxexseight = 0;
 		if(windowWidth < windowHeight){
 			boxSize = windowWidth/((this.size+1)*3+(this.size+2))*5;
 			gameWidth = "100%";
@@ -137,15 +139,19 @@ var bl = function(){
 			boardHeight = ((windowHeight-windowWidth) / 2 ) + "px";
 			adWidth = "100%";
 			adHeight = boardHeight;
+			topBoxesWidth = "33.333%";
+			topBoxesHeight = "100%";
 		}
 		else{
+			boxSize = windowHeight/((this.size+1)*3+(this.size+2))*5;
 			gameWidth = windowHeight;
 			gameHeight = "100%";
-			boxSize = windowHeight/((this.size+1)*3+(this.size+2))*5;
 			boardWidth = ((windowWidth - windowHeight) / 2) + "px";
 			boardHeight = "100%";
 			adHeight = "100%";
 			adWidth = boardWidth;
+			topBoxesWidth = "100%";
+			topBoxesHeight = "33.333%";
 		}
 		var temp = this.root;
 		while(temp != undefined){
@@ -154,76 +160,76 @@ var bl = function(){
 				if(temp.topLine.active){
 					cssClass = "yanCizgiActive cizgi";
 				}
-				append = append + '<div class="'+cssClass+'" style="top:0px;left:0px;width:'+boxSize+'px;height:'+(boxSize/5)+'px;border-radius:'+(boxSize/5)+'px" data-cizgiSec="'+temp.x+'-'+temp.y+'_topLine" onMouseDown="process(this)"></div>';
+				append = append + '<div class="'+cssClass+'" style="top:0px;left:0px;width:'+boxSize+'px;height:'+(boxSize/5)+'px;border-radius:'+(boxSize/5)+'px" data-cizgiSec="'+temp.x+'-'+temp.y+'_topLine"  onMouseDown="process(this)" onMouseOver="lineOver(this)" onMouseOut="lineOut(this)"></div>';
 				
 				cssClass = "yanCizgiDeActive cizgi";
 				if(temp.bottomLine.active){
 					cssClass = "yanCizgiActive cizgi";
 				}
-				append = append + '<div class="'+cssClass+'" style="top:'+(boxSize/5)*4+'px;left:0px;width:'+boxSize+'px;height:'+(boxSize/5)+'px;border-radius:'+(boxSize/5)+'px" data-cizgiSec="'+temp.x+'-'+temp.y+'_bottomLine" onMouseDown="process(this)"></div>';
+				append = append + '<div class="'+cssClass+'" style="top:'+(boxSize/5)*4+'px;left:0px;width:'+boxSize+'px;height:'+(boxSize/5)+'px;border-radius:'+(boxSize/5)+'px" data-cizgiSec="'+temp.x+'-'+temp.y+'_bottomLine" onMouseDown="process(this)" onMouseOver="lineOver(this)" onMouseOut="lineOut(this)"></div>';
 				
 				cssClass = "dikCizgiDeActive cizgi";
 				if(temp.leftLine.active){
 					cssClass = "dikCizgiActive cizgi";
 				}
-				append = append + '<div class="'+cssClass+'" style="top:0px;left:0px;width:'+(boxSize/5)+'px;height:'+boxSize+'px;border-radius:'+(boxSize/5)+'px" data-cizgiSec="'+temp.x+'-'+temp.y+'_leftLine"onMouseDown=" process(this)"></div>';
+				append = append + '<div class="'+cssClass+'" style="top:0px;left:0px;width:'+(boxSize/5)+'px;height:'+boxSize+'px;border-radius:'+(boxSize/5)+'px" data-cizgiSec="'+temp.x+'-'+temp.y+'_leftLine" onMouseDown="process(this)"></div>';
 				
 				cssClass = "dikCizgiDeActive cizgi";
 				if(temp.rightLine.active){
 					cssClass = "dikCizgiActive cizgi";
 				}
-				append = append + '<div class="'+cssClass+'" style="top:0px;left:'+(boxSize/5)*4+'px;width:'+(boxSize/5)+'px;height:'+boxSize+'px;border-radius:'+(boxSize/5)+'px" data-cizgiSec="'+temp.x+'-'+temp.y+'_rightLine" onMouseDown="process(this)"></div>';
+				append = append + '<div class="'+cssClass+'" style="top:0px;left:'+(boxSize/5)*4+'px;width:'+(boxSize/5)+'px;height:'+boxSize+'px;border-radius:'+(boxSize/5)+'px" data-cizgiSec="'+temp.x+'-'+temp.y+'_rightLine" onMouseDown="process(this)" onMouseOver="lineOver(this)" onMouseOut="lineOut(this)"></div>';
 			}
 			else if(temp.x == 0 & temp.y > 0){ // en sol satır
 				cssClass = "yanCizgiDeActive cizgi";
 				if(temp.bottomLine.active){
 					cssClass = "yanCizgiActive cizgi";
 				}
-				append = append + '<div class="'+cssClass+'" style="top:'+((temp.y)*(boxSize/5)*4 + (boxSize/5)*4 )+'px;left:0px;width:'+boxSize+'px;height:'+(boxSize/5)+'px;border-radius:'+(boxSize/5)+'px" data-cizgiSec="'+temp.x+'-'+temp.y+'_bottomLine" onMouseDown="process(this)"></div>';
+				append = append + '<div class="'+cssClass+'" style="top:'+((temp.y)*(boxSize/5)*4 + (boxSize/5)*4 )+'px;left:0px;width:'+boxSize+'px;height:'+(boxSize/5)+'px;border-radius:'+(boxSize/5)+'px" data-cizgiSec="'+temp.x+'-'+temp.y+'_bottomLine" onMouseDown="process(this)" onMouseOver="lineOver(this)" onMouseOut="lineOut(this)"></div>';
 				
 				cssClass = "dikCizgiDeActive cizgi";
 				if(temp.leftLine.active){
 					cssClass = "dikCizgiActive cizgi";
 				}
-				append = append + '<div class="'+cssClass+'" style="top:'+((temp.y)*(boxSize/5)*4 )+'px;left:0px;width:'+(boxSize/5)+'px;height:'+boxSize+'px;border-radius:'+(boxSize/5)+'px" data-cizgiSec="'+temp.x+'-'+temp.y+'_leftLine" onMouseDown="process(this)"></div>';
+				append = append + '<div class="'+cssClass+'" style="top:'+((temp.y)*(boxSize/5)*4 )+'px;left:0px;width:'+(boxSize/5)+'px;height:'+boxSize+'px;border-radius:'+(boxSize/5)+'px" data-cizgiSec="'+temp.x+'-'+temp.y+'_leftLine" onMouseDown="process(this)" onMouseOver="lineOver(this)" onMouseOut="lineOut(this)"></div>';
 				
 				cssClass = "dikCizgiDeActive cizgi";
 				if(temp.rightLine.active){
 					cssClass = "dikCizgiActive cizgi";
 				}
-				append = append + '<div class="'+cssClass+'" style="top:'+((temp.y)*(boxSize/5)*4 )+'px;left:'+((temp.x+1)*(boxSize/5)*4 )+'px;width:'+(boxSize/5)+'px;height:'+boxSize+'px;border-radius:'+(boxSize/5)+'px" data-cizgiSec="'+temp.x+'-'+temp.y+'_rightLine" onMouseDown="process(this)"></div>';
+				append = append + '<div class="'+cssClass+'" style="top:'+((temp.y)*(boxSize/5)*4 )+'px;left:'+((temp.x+1)*(boxSize/5)*4 )+'px;width:'+(boxSize/5)+'px;height:'+boxSize+'px;border-radius:'+(boxSize/5)+'px" data-cizgiSec="'+temp.x+'-'+temp.y+'_rightLine" onMouseDown="process(this)" onMouseOver="lineOver(this)" onMouseOut="lineOut(this)"></div>';
 			}
 			else if(temp.x > 0 & temp.y == 0){ // en üst satır
 				cssClass = "yanCizgiDeActive cizgi";
 				if(temp.topLine.active){
 					cssClass = "yanCizgiActive cizgi";
 				}
-				append = append + '<div class="'+cssClass+'" style="top:0px;left:'+((temp.x)*(boxSize/5)*4  )+'px;width:'+boxSize+'px;height:'+(boxSize/5)+'px;border-radius:'+(boxSize/5)+'px" data-cizgiSec="'+temp.x+'-'+temp.y+'_topLine" onMouseDown="process(this)"></div>';
+				append = append + '<div class="'+cssClass+'" style="top:0px;left:'+((temp.x)*(boxSize/5)*4  )+'px;width:'+boxSize+'px;height:'+(boxSize/5)+'px;border-radius:'+(boxSize/5)+'px" data-cizgiSec="'+temp.x+'-'+temp.y+'_topLine" onMouseDown="process(this)" onMouseOver="lineOver(this)" onMouseOut="lineOut(this)"></div>';
 				
 				cssClass = "dikCizgiDeActive cizgi";
 				if(temp.rightLine.active){
 					cssClass = "dikCizgiActive cizgi";
 				}
-				append = append + '<div class="'+cssClass+'" style="top:0px;left:'+((temp.x+1)*(boxSize/5)*4 )+'px;width:'+(boxSize/5)+'px;height:'+boxSize+'px;border-radius:'+(boxSize/5)+'px" data-cizgiSec="'+temp.x+'-'+temp.y+'_rightLine" onMouseDown="process(this)"></div>';
+				append = append + '<div class="'+cssClass+'" style="top:0px;left:'+((temp.x+1)*(boxSize/5)*4 )+'px;width:'+(boxSize/5)+'px;height:'+boxSize+'px;border-radius:'+(boxSize/5)+'px" data-cizgiSec="'+temp.x+'-'+temp.y+'_rightLine" onMouseDown="process(this)" onMouseOver="lineOver(this)" onMouseOut="lineOut(this)"></div>';
 				
 				cssClass = "yanCizgiDeActive cizgi";
 				if(temp.bottomLine.active){
 					cssClass = "yanCizgiActive cizgi";
 				}
-				append = append + '<div class="'+cssClass+'" style="top:'+((temp.y+1)*(boxSize/5)*4)+'px;left:'+((temp.x)*(boxSize/5)*4  )+'px;width:'+boxSize+'px;height:'+(boxSize/5)+'px;border-radius:'+(boxSize/5)+'px" data-cizgiSec="'+temp.x+'-'+temp.y+'_bottomLine" onMouseDown="process(this)"></div>';
+				append = append + '<div class="'+cssClass+'" style="top:'+((temp.y+1)*(boxSize/5)*4)+'px;left:'+((temp.x)*(boxSize/5)*4  )+'px;width:'+boxSize+'px;height:'+(boxSize/5)+'px;border-radius:'+(boxSize/5)+'px" data-cizgiSec="'+temp.x+'-'+temp.y+'_bottomLine" onMouseDown="process(this)" onMouseOver="lineOver(this)" onMouseOut="lineOut(this)"></div>';
 			}
 			else if(temp.y == this.size & temp.x > 0){ // en alt satır
 				cssClass = "dikCizgiDeActive cizgi";
 				if(temp.rightLine.active){
 					cssClass = "dikCizgiActive cizgi";
 				}
-				append = append + '<div class="'+cssClass+'" style="top:'+((temp.y)*(boxSize/5)*4)+'px;left:'+((temp.x+1)*(boxSize/5)*4 )+'px;width:'+(boxSize/5)+'px;height:'+boxSize+'px;border-radius:'+(boxSize/5)+'px" data-cizgiSec="'+temp.x+'-'+temp.y+'_rightLine" onMouseDown="process(this)"></div>';
+				append = append + '<div class="'+cssClass+'" style="top:'+((temp.y)*(boxSize/5)*4)+'px;left:'+((temp.x+1)*(boxSize/5)*4 )+'px;width:'+(boxSize/5)+'px;height:'+boxSize+'px;border-radius:'+(boxSize/5)+'px" data-cizgiSec="'+temp.x+'-'+temp.y+'_rightLine" onMouseDown="process(this)" onMouseOver="lineOver(this)" onMouseOut="lineOut(this)"></div>';
 				
 				cssClass = "yanCizgiDeActive cizgi";
 				if(temp.bottomLine.active){
 					cssClass = "yanCizgiActive cizgi";
 				}
-				append = append + '<div class="'+cssClass+'" style="top:'+((temp.y+1)*(boxSize/5)*4)+'px;left:'+((temp.x)*(boxSize/5)*4  )+'px;width:'+boxSize+'px;height:'+(boxSize/5)+'px;border-radius:'+(boxSize/5)+'px" data-cizgiSec="'+temp.x+'-'+temp.y+'_bottomLine" onMouseDown="process(this)"></div>';
+				append = append + '<div class="'+cssClass+'" style="top:'+((temp.y+1)*(boxSize/5)*4)+'px;left:'+((temp.x)*(boxSize/5)*4  )+'px;width:'+boxSize+'px;height:'+(boxSize/5)+'px;border-radius:'+(boxSize/5)+'px" data-cizgiSec="'+temp.x+'-'+temp.y+'_bottomLine" onMouseDown="process(this)" onMouseOver="lineOver(this)" onMouseOut="lineOut(this)"></div>';
 				
 			}
 			else if(temp.x == this.size & temp.y > 0){// en sağ satır
@@ -231,26 +237,26 @@ var bl = function(){
 				if(temp.bottomLine.active){
 					cssClass = "yanCizgiActive cizgi";
 				}
-				append = append + '<div class="'+cssClass+'" style="top:'+((temp.y+1)*(boxSize/5)*4)+'px;left:'+((temp.x)*(boxSize/5)*4  )+'px;width:'+boxSize+'px;height:'+(boxSize/5)+'px;border-radius:'+(boxSize/5)+'px" data-cizgiSec="'+temp.x+'-'+temp.y+'_bottomLine" onMouseDown="process(this)"></div>';
+				append = append + '<div class="'+cssClass+'" style="top:'+((temp.y+1)*(boxSize/5)*4)+'px;left:'+((temp.x)*(boxSize/5)*4  )+'px;width:'+boxSize+'px;height:'+(boxSize/5)+'px;border-radius:'+(boxSize/5)+'px" data-cizgiSec="'+temp.x+'-'+temp.y+'_bottomLine" onMouseDown="process(this)" onMouseOver="lineOver(this)" onMouseOut="lineOut(this)"></div>';
 				
 				cssClass = "dikCizgiDeActive cizgi";
 				if(temp.rightLine.active){
 					cssClass = "dikCizgiActive cizgi";
 				}
-				append = append + '<div class="'+cssClass+'" style="top:'+((temp.y)*(boxSize/5)*4)+'px;left:'+((temp.x+1)*(boxSize/5)*4 )+'px;width:'+(boxSize/5)+'px;height:'+boxSize+'px;border-radius:'+(boxSize/5)+'px" data-cizgiSec="'+temp.x+'-'+temp.y+'_rightLine" onMouseDown="process(this)"></div>';
+				append = append + '<div class="'+cssClass+'" style="top:'+((temp.y)*(boxSize/5)*4)+'px;left:'+((temp.x+1)*(boxSize/5)*4 )+'px;width:'+(boxSize/5)+'px;height:'+boxSize+'px;border-radius:'+(boxSize/5)+'px" data-cizgiSec="'+temp.x+'-'+temp.y+'_rightLine" onMouseDown="process(this)" onMouseOver="lineOver(this)" onMouseOut="lineOut(this)"></div>';
 			}
 			else{
 				cssClass = "yanCizgiDeActive cizgi";
 				if(temp.bottomLine.active){
 					cssClass = "yanCizgiActive cizgi";
 				}
-				append = append + '<div class="'+cssClass+'" style="top:'+((temp.y+1)*(boxSize/5)*4)+'px;left:'+((temp.x)*(boxSize/5)*4  )+'px;width:'+boxSize+'px;height:'+(boxSize/5)+'px;border-radius:'+(boxSize/5)+'px" data-cizgiSec="'+temp.x+'-'+temp.y+'_bottomLine" onMouseDown="process(this)"></div>';
+				append = append + '<div class="'+cssClass+'" style="top:'+((temp.y+1)*(boxSize/5)*4)+'px;left:'+((temp.x)*(boxSize/5)*4  )+'px;width:'+boxSize+'px;height:'+(boxSize/5)+'px;border-radius:'+(boxSize/5)+'px" data-cizgiSec="'+temp.x+'-'+temp.y+'_bottomLine" onMouseDown="process(this)" onMouseOver="lineOver(this)" onMouseOut="lineOut(this)"></div>';
 				
 				cssClass = "dikCizgiDeActive cizgi";
 				if(temp.rightLine.active){
 					cssClass = "dikCizgiActive cizgi";
 				}
-				append = append + '<div class="'+cssClass+'" style="top:'+((temp.y)*(boxSize/5)*4)+'px;left:'+((temp.x+1)*(boxSize/5)*4 )+'px;width:'+(boxSize/5)+'px;height:'+boxSize+'px;border-radius:'+(boxSize/5)+'px" data-cizgiSec="'+temp.x+'-'+temp.y+'_rightLine" onMouseDown="process(this)"></div>';
+				append = append + '<div class="'+cssClass+'" style="top:'+((temp.y)*(boxSize/5)*4)+'px;left:'+((temp.x+1)*(boxSize/5)*4 )+'px;width:'+(boxSize/5)+'px;height:'+boxSize+'px;border-radius:'+(boxSize/5)+'px" data-cizgiSec="'+temp.x+'-'+temp.y+'_rightLine" onMouseDown="process(this)" onMouseOver="lineOver(this)" onMouseOut="lineOut(this)"></div>';
 			}
 			temp = temp.next;
 		}
@@ -272,6 +278,9 @@ var bl = function(){
 				"height":gameHeight,
 				"display":"block"
 			});
+			$(".sira").css({"width":topBoxesWidth,"height":topBoxesHeight});
+			$(".user1").css({"width":topBoxesWidth,"height":topBoxesHeight});
+			$(".user2").css({"width":topBoxesWidth,"height":topBoxesHeight});
 			$(".game").html(append);
 		});
 	}
@@ -348,8 +357,30 @@ socket.on("updateGame",function(data){
 				cizgi.removeClass("dikCizgiDeActive");
 				cizgi.addClass("dikCizgiActive");
 			}
+			$(cizgi).removeClass("lineOver");
+			$(cizgi).removeClass("lineOut");
 		}
 	});
+});
+socket.on("lineOvered",function(data){
+	var x = data.x;
+	var y = data.y;
+	var direction = data.direction;
+	if(direction == "rightLine" | direction == "bottomLine"){
+		var line = $(".cizgi[data-cizgiSec='"+x+"-"+y+"_"+direction+"']");
+		$(line).addClass("lineOver");
+		$(line).removeClass("lineOut");
+	}
+});
+socket.on("lineOuted",function(data){
+	var x = data.x;
+	var y = data.y;
+	var direction = data.direction;
+	if(direction == "rightLine" | direction == "bottomLine"){
+		var line = $(".cizgi[data-cizgiSec='"+x+"-"+y+"_"+direction+"']");
+		$(line).removeClass("lineOver");
+		$(line).addClass("lineOut");
+	}
 });
 socket.on("gameFinished",function(data){
 	if(data.winner != 0){
@@ -370,9 +401,9 @@ function anaMenuyeDon(){
 	$(".arkadasinlaOynaMenu").hide();
 	$(".rastgeleOynaMenu").hide();
 }
-function process(cizgi){
+function process(line){
 	$(document).ready(function(){
-		var secici = $(cizgi).attr("data-cizgiSec");
+		var secici = $(line).attr("data-cizgiSec");
 		var xString = "";
 		var yString = "";
 		var direction = "";
@@ -410,6 +441,90 @@ function process(cizgi){
 		var x = parseInt(xString);
 		var y = parseInt(yString);
 		socket.emit("process",{"x":x,"y":y,"direction":direction});
+	});
+}
+function lineOver(line){
+	$(document).ready(function(){
+		var secici = $(line).attr("data-cizgiSec");
+		var xString = "";
+		var yString = "";
+		var direction = "";
+		var i = 0;
+		while(i<secici.length){
+			if(secici.charAt(i) != "-"){
+				xString = xString + secici.charAt(i);
+			}
+			else{
+				i++;
+				break;
+			}
+			i++;
+		}
+		while(i<secici.length){
+			if(secici.charAt(i) != "_"){
+				yString = yString + secici.charAt(i);
+			}
+			else{
+				i++;
+				break;
+			}
+			i++;
+		}
+		while(i<secici.length){
+			if(secici.charAt(i) != undefined){
+				direction = direction + secici.charAt(i);
+			}
+			else{
+				i++;
+				break;
+			}
+			i++;
+		}
+		var x = parseInt(xString);
+		var y = parseInt(yString);
+		socket.emit("lineOver",{"x":x,"y":y,"direction":direction});
+	});
+}
+function lineOut(line){
+	$(document).ready(function(){
+		var secici = $(line).attr("data-cizgiSec");
+		var xString = "";
+		var yString = "";
+		var direction = "";
+		var i = 0;
+		while(i<secici.length){
+			if(secici.charAt(i) != "-"){
+				xString = xString + secici.charAt(i);
+			}
+			else{
+				i++;
+				break;
+			}
+			i++;
+		}
+		while(i<secici.length){
+			if(secici.charAt(i) != "_"){
+				yString = yString + secici.charAt(i);
+			}
+			else{
+				i++;
+				break;
+			}
+			i++;
+		}
+		while(i<secici.length){
+			if(secici.charAt(i) != undefined){
+				direction = direction + secici.charAt(i);
+			}
+			else{
+				i++;
+				break;
+			}
+			i++;
+		}
+		var x = parseInt(xString);
+		var y = parseInt(yString);
+		socket.emit("lineOut",{"x":x,"y":y,"direction":direction});
 	});
 }
 $(document).ready(function(){

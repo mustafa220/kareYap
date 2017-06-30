@@ -303,15 +303,16 @@ var bl = function(){
 		return undefined;
 	}
 }
-function code(uzunluk) {
-	var maske = '';
-	maske += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-	maske += '0123456789';
+function createNewCode(uzunluk) {
+	maske = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 	var sonuc = '';
 	for (var i = uzunluk; i > 0; --i){
 		sonuc += maske[Math.floor(Math.random() * maske.length)];
 	}
-	return 1;
+	if(rooms.getFromCode(sonuc) != undefined){
+		return createNewCode(uzunluk);
+	}
+	return sonuc;
 }
 var io = require("socket.io").listen(server);
 var users = new userBl();
@@ -331,7 +332,7 @@ io.sockets.on("connection",function(socket){
 	socket.on("createNewGameFriend",function(data){
 		socketId = socket.id;
 		var user = users.getFromSocketId(socketId);
-		var newRoomCode = code(3);
+		var newRoomCode = createNewCode(3);
 		rooms.insert(user.username,data.size,newRoomCode);
 		var room = rooms.getFromCode(newRoomCode);
 		var game = new bl();
@@ -356,8 +357,14 @@ io.sockets.on("connection",function(socket){
 		var y = data.y;
 		var direction = data.direction;
 		var socketId = socket.id;
-		var user = users.getFromSocketId(socketId)
+		var user = users.getFromSocketId(socketId);
+		if(user == undefined){
+			return false;
+		}
 		var room = rooms.getFromUsername(user.username);
+		if(room == undefined){
+			return false;
+		}
 		var game = room.game;
 		var sira = room.sira;
 		if(sira == 1){
@@ -367,7 +374,6 @@ io.sockets.on("connection",function(socket){
 			var controlUser = room.user2;
 		}
 		var scoreControl = 0;
-		console.log("x : "+ x + " - y : "+y + " - room.size : "+ room.size);
 		if(user.username == controlUser){
 			var getNode = game.get(x,y);
 			if(direction == "rightLine"){
@@ -433,12 +439,10 @@ io.sockets.on("connection",function(socket){
 					else{
 						room.user2Score += addScore;
 					}
-					console.log("x : "+x+" -- y : "+y);
 					io.to(users.getFromUsername(room.user1).socketId).emit("updateGame",{"user1":room.user1,"user2":room.user2,"user1Score":room.user1Score,"user2Score":room.user2Score,"sira":room.sira,"x":x,"y":y,"direction":direction,"change":true,"siraChange":false});
 					io.to(users.getFromUsername(room.user2).socketId).emit("updateGame",{"user1":room.user1,"user2":room.user2,"user1Score":room.user1Score,"user2Score":room.user2Score,"sira":room.sira,"x":x,"y":y,"direction":direction,"change":true,"siraChange":false});
 				}
 				else{
-					console.log("x : "+x+" -- y : "+y);
 					if(room.sira == 1){
 						room.sira = 2;
 					}
@@ -449,6 +453,7 @@ io.sockets.on("connection",function(socket){
 					io.to(users.getFromUsername(room.user2).socketId).emit("updateGame",{"user1":room.user1,"user2":room.user2,"user1Score":room.user1Score,"user2Score":room.user2Score,"sira":room.sira,"x":x,"y":y,"direction":direction,"change":true,"siraChange":true});
 				}
 				if((room.user1Score + room.user2Score) == room.size * room.size){
+					rooms.deleteFromUsername(room.user1);
 					if(room.user1Score > room.user2Score){
 						io.to(users.getFromUsername(room.user1).socketId).emit("gameFinished",{"winner":room.user1});
 						io.to(users.getFromUsername(room.user2).socketId).emit("gameFinished",{"winner":room.user1});
@@ -475,6 +480,64 @@ io.sockets.on("connection",function(socket){
 			}
 		}
 		
+	});
+	socket.on("lineOver",function(data){
+		var x = data.x;
+		var y = data.y;
+		var direction = data.direction;
+		var socketId = socket.id;
+		var user = users.getFromSocketId(socketId);
+		if(user == undefined){
+			return false;
+		}
+		var room = rooms.getFromUsername(user.username);
+		if(room == undefined){
+			return false;
+		}
+		var game = room.game;
+		var getNode = game.get(x,y);
+		var controlledLine = false;
+		if(direction == "rightLine" & !getNode.rightLine.active){ controlledLine = true; }
+		else if(direction == "bottomLine" & !getNode.bottomLine.active){ controlledLine = true; }
+		var sira = room.sira;
+		if(sira == 1){
+			var controlUser = room.user2;
+		}
+		else{
+			var controlUser = room.user1;
+		}
+		if(controlledLine == true & user.username != controlUser){
+			io.to(users.getFromUsername(controlUser).socketId).emit("lineOvered",data);
+		}
+	});
+	socket.on("lineOut",function(data){
+		var x = data.x;
+		var y = data.y;
+		var direction = data.direction;
+		var socketId = socket.id;
+		var user = users.getFromSocketId(socketId);
+		if(user == undefined){
+			return false;
+		}
+		var room = rooms.getFromUsername(user.username);
+		if(room == undefined){
+			return false;
+		}
+		var game = room.game;
+		var getNode = game.get(x,y);
+		var controlledLine = false;
+		if(direction == "rightLine" & !getNode.rightLine.active){ controlledLine = true;}
+		else if(direction == "bottomLine" & !getNode.bottomLine.active){ controlledLine = true; }
+		var sira = room.sira;
+		if(sira == 1){
+			var controlUser = room.user2;
+		}
+		else{
+			var controlUser = room.user1;
+		}
+		if(controlledLine == true & user.username != controlUser){
+			io.to(users.getFromUsername(controlUser).socketId).emit("lineOuted",data);
+		}
 	});
 	socket.on("disconnect",function(){
 		var socketId = socket.id;
