@@ -1,0 +1,27 @@
+{
+  "name": "kareyap",
+  "version": "1.0.0",
+  "description": "kare yapma oyunu",
+  "main": "kare.js",
+  "dependencies": {
+    "avl": "^1.0.1",
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "express-session": "^1.15.3",
+    "ip": "^1.1.5",
+    "md5": "^2.2.1",
+    "mysql": "^2.13.0",
+    "node-avl-tree": "^0.1.1",
+    "socket.io": "^2.0.3",
+    "session": "^0.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "any"
+  },
+  "keywords": [
+    "kare"
+  ],
+  "author": "Mustafa Çolakoğlu",
+  "license": "ISC"
+}

@@ -1,5 +1,4 @@
 var express = require("express");
-var md5 = require("md5");
 var app = express();
 
 app.use("/js",express.static(__dirname+"/js"));
