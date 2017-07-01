@@ -5,8 +5,8 @@ app.use("/js",express.static(__dirname+"/js"));
 app.use("/css",express.static(__dirname+"/css"));
 app.use("/pages",express.static(__dirname+"/pages"));
 
-var server = app.listen(80);
-console.log("listening on port 80");
+var server = app.listen(process.env.PORT);
+console.log("listening on port "+process.env.PORT);
 var roomNode = function(){
 	this.code = undefined;
 	this.user1 = undefined;
