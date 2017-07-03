@@ -397,7 +397,7 @@ socket.on("updateGame",function(data){
 	}
 });
 function signLine(x,y,direction){
-	alert();
+	
 }
 socket.on("lineOvered",function(data){
 	var x = data.x;
