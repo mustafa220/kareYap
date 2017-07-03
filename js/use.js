@@ -5,18 +5,21 @@ var windowWidth = $(window).width();
 var windowHeight = $(window).height();
 if(!firstLogin){
 	$(document).ready(function(){
-		$(".firstLogin").show();
+		$(".login-form").show();
 		$(".loginButton").click(function(){
 			socket.emit("login",{"username":$(".inputUserName").val()});
 		});
 	});
 }
+socket.on("alert",function(data){
+	alert(data.message);
+});
 socket.on("login",function(data){
 	if(data.code == 0){
 		$(document).ready(function(){
-			$(".firstLogin").hide();
-			$(".anaMenu").show();
-			$(".showUserName").html("Hoşgeldiniz " + data.username);
+			$(".login-form").hide();
+			$(".main-screen").show();
+			$(".user-name").html("Hoşgeldiniz " + data.username);
 			logined = true;
 		});
 	}
@@ -129,6 +132,7 @@ var bl = function(){
 		var gameWidth = 0;
 		var gameHeight = 0;
 		var append = "";
+		var appendBoxes = "";
 		var topBoxesWidth = 0;
 		var topBoxexseight = 0;
 		if(windowWidth < windowHeight){
@@ -156,6 +160,7 @@ var bl = function(){
 		var temp = this.root;
 		while(temp != undefined){
 			if(temp.x == 0 & temp.y == 0){ // sol üst köşe
+				appendBoxes = appendBoxes + '<div class="emptyBox" style="position:absolute;z-index:100;background:#fff;width:'+((boxSize/5)*3)+'px;height:'+((boxSize/5)*3)+'px;top:'+(boxSize/5)+'px;left:'+(boxSize/5)+'px;" data-coord="('+temp.x+','+temp.y+')"></div>';
 				cssClass = "yanCizgiDeActive cizgi";
 				if(temp.topLine.active){
 					cssClass = "yanCizgiActive cizgi";
@@ -181,6 +186,7 @@ var bl = function(){
 				append = append + '<div class="'+cssClass+'" style="top:0px;left:'+(boxSize/5)*4+'px;width:'+(boxSize/5)+'px;height:'+boxSize+'px;border-radius:'+(boxSize/5)+'px" data-cizgiSec="'+temp.x+'-'+temp.y+'_rightLine" onMouseDown="process(this)" onMouseOver="lineOver(this)" onMouseOut="lineOut(this)"></div>';
 			}
 			else if(temp.x == 0 & temp.y > 0){ // en sol satır
+				appendBoxes = appendBoxes + '<div class="emptyBox" style="position:absolute;z-index:100;background:#fff;width:'+((boxSize/5)*3)+'px;height:'+((boxSize/5)*3)+'px;top:'+((temp.y - 1)*(boxSize/5)*4 + (boxSize/5)*5)+'px;left:'+(boxSize/5)+'px;" data-coord="('+temp.x+','+temp.y+')"></div>';
 				cssClass = "yanCizgiDeActive cizgi";
 				if(temp.bottomLine.active){
 					cssClass = "yanCizgiActive cizgi";
@@ -200,6 +206,7 @@ var bl = function(){
 				append = append + '<div class="'+cssClass+'" style="top:'+((temp.y)*(boxSize/5)*4 )+'px;left:'+((temp.x+1)*(boxSize/5)*4 )+'px;width:'+(boxSize/5)+'px;height:'+boxSize+'px;border-radius:'+(boxSize/5)+'px" data-cizgiSec="'+temp.x+'-'+temp.y+'_rightLine" onMouseDown="process(this)" onMouseOver="lineOver(this)" onMouseOut="lineOut(this)"></div>';
 			}
 			else if(temp.x > 0 & temp.y == 0){ // en üst satır
+				appendBoxes = appendBoxes + '<div class="emptyBox" style="position:absolute;z-index:100;background:#fff;width:'+((boxSize/5)*3)+'px;height:'+((boxSize/5)*3)+'px;top:'+(boxSize/5)+'px;left:'+((temp.x - 1)*(boxSize/5)*4 + (boxSize/5)*5)+'px;" data-coord="('+temp.x+','+temp.y+')"></div>';
 				cssClass = "yanCizgiDeActive cizgi";
 				if(temp.topLine.active){
 					cssClass = "yanCizgiActive cizgi";
@@ -219,6 +226,7 @@ var bl = function(){
 				append = append + '<div class="'+cssClass+'" style="top:'+((temp.y+1)*(boxSize/5)*4)+'px;left:'+((temp.x)*(boxSize/5)*4  )+'px;width:'+boxSize+'px;height:'+(boxSize/5)+'px;border-radius:'+(boxSize/5)+'px" data-cizgiSec="'+temp.x+'-'+temp.y+'_bottomLine" onMouseDown="process(this)" onMouseOver="lineOver(this)" onMouseOut="lineOut(this)"></div>';
 			}
 			else if(temp.y == this.size & temp.x > 0){ // en alt satır
+				appendBoxes = appendBoxes + '<div class="emptyBox" style="position:absolute;z-index:100;background:#fff;width:'+((boxSize/5)*3)+'px;height:'+((boxSize/5)*3)+'px;top:'+((temp.y - 1)*(boxSize/5)*4 + (boxSize/5)*5)+'px;left:'+((temp.x - 1)*(boxSize/5)*4 + (boxSize/5)*5)+'px;" data-coord="('+temp.x+','+temp.y+')"></div>';
 				cssClass = "dikCizgiDeActive cizgi";
 				if(temp.rightLine.active){
 					cssClass = "dikCizgiActive cizgi";
@@ -233,6 +241,7 @@ var bl = function(){
 				
 			}
 			else if(temp.x == this.size & temp.y > 0){// en sağ satır
+				appendBoxes = appendBoxes + '<div class="emptyBox" style="position:absolute;z-index:100;background:#fff;width:'+((boxSize/5)*3)+'px;height:'+((boxSize/5)*3)+'px;top:'+((temp.y - 1)*(boxSize/5)*4 + (boxSize/5)*5)+'px;left:'+((temp.x - 1)*(boxSize/5)*4 + (boxSize/5)*5)+'px;" data-coord="('+temp.x+','+temp.y+')"></div>';
 				cssClass = "yanCizgiDeActive cizgi";
 				if(temp.bottomLine.active){
 					cssClass = "yanCizgiActive cizgi";
@@ -246,6 +255,7 @@ var bl = function(){
 				append = append + '<div class="'+cssClass+'" style="top:'+((temp.y)*(boxSize/5)*4)+'px;left:'+((temp.x+1)*(boxSize/5)*4 )+'px;width:'+(boxSize/5)+'px;height:'+boxSize+'px;border-radius:'+(boxSize/5)+'px" data-cizgiSec="'+temp.x+'-'+temp.y+'_rightLine" onMouseDown="process(this)" onMouseOver="lineOver(this)" onMouseOut="lineOut(this)"></div>';
 			}
 			else{
+				appendBoxes = appendBoxes + '<div class="emptyBox" style="position:absolute;z-index:100;background:#fff;width:'+((boxSize/5)*3)+'px;height:'+((boxSize/5)*3)+'px;top:'+((temp.y - 1)*(boxSize/5)*4 + (boxSize/5)*5)+'px;left:'+((temp.x - 1)*(boxSize/5)*4 + (boxSize/5)*5)+'px;" data-coord="('+temp.x+','+temp.y+')"></div>';
 				cssClass = "yanCizgiDeActive cizgi";
 				if(temp.bottomLine.active){
 					cssClass = "yanCizgiActive cizgi";
@@ -278,10 +288,11 @@ var bl = function(){
 				"height":gameHeight,
 				"display":"block"
 			});
-			$(".sira").css({"width":topBoxesWidth,"height":topBoxesHeight});
-			$(".user1").css({"width":topBoxesWidth,"height":topBoxesHeight});
-			$(".user2").css({"width":topBoxesWidth,"height":topBoxesHeight});
+			$(".sira").css({"width":topBoxesWidth,"height":topBoxesHeight,"float":"left"});
+			$(".user1").css({"width":topBoxesWidth,"height":topBoxesHeight,"float":"left"});
+			$(".user2").css({"width":topBoxesWidth,"height":topBoxesHeight,"float":"left"});
 			$(".game").html(append);
+			$(".game").append(appendBoxes);
 		});
 	}
 	this.get = function(x,y){
@@ -296,9 +307,13 @@ var bl = function(){
 	}
 }
 $(document).ready(function(){
-	$(".arkadasinlaOyna").click(function(){
-		$(".anaMenu:eq(0)").hide();
-		$(".arkadasinlaOynaMenu").show();
+	$(".multi-play").click(function(){
+		$(".main-screen").hide();
+		$(".play-with-friend").show();
+	});
+	$(".quick-play").click(function(){
+		$(".main-screen").hide();
+		$(".play-with-quick").show();
 	});
 	$(".arkadasinlaOynaYeniOlustur").click(function(){
 		socket.emit("createNewGameFriend",{"size":$(".birim1").val()});
@@ -325,7 +340,7 @@ socket.on("createGame",function(data){
 	$(".game").show();
 	$(".ad").show();
 	$(document).ready(function(){
-		$(".arkadasinlaOynaMenu").hide();
+		$(".play-with-friend").hide();
 		$(".user1").html(data.user1+ " : "+data.user1Score);
 		$(".user2").html(data.user2+ " : "+data.user2Score);
 		if(data.sira == 1){
@@ -357,11 +372,33 @@ socket.on("updateGame",function(data){
 				cizgi.removeClass("dikCizgiDeActive");
 				cizgi.addClass("dikCizgiActive");
 			}
+			signLine(cizgi);
 			$(cizgi).removeClass("lineOver");
 			$(cizgi).removeClass("lineOut");
+			for(var i=0;i<data.scoredXy.length;i++){
+				if(data.scoredXy[i] != null & data.scoredXy[i] != undefined ){
+					if(data.sira == 1){
+						$(".emptyBox[data-coord='("+data.scoredXy[i].x+","+data.scoredXy[i].y+")']").css("background","#f03236");
+					}
+					else{
+						$(".emptyBox[data-coord='("+data.scoredXy[i].x+","+data.scoredXy[i].y+")']").css("background","#68b5f0");
+					}
+				}
+			}
 		}
 	});
+	var player = document.getElementById("notification");
+	if(data.yourTurn){
+		player.play();
+		player.duration = 0;
+		if(Android != null & Android != undefined){
+			Android.playSound();
+		}
+	}
 });
+function signLine(x,y,direction){
+	alert();
+}
 socket.on("lineOvered",function(data){
 	var x = data.x;
 	var y = data.y;
@@ -397,9 +434,7 @@ function anaMenuyeDon(){
 	$(".game").hide();
 	$(".ad").hide();
 	$(".gameOver").hide();
-	$(".anaMenu").show();
-	$(".arkadasinlaOynaMenu").hide();
-	$(".rastgeleOynaMenu").hide();
+	$(".main-screen").show();
 }
 function process(line){
 	$(document).ready(function(){

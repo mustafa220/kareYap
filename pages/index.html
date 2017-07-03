@@ -2,19 +2,28 @@
 <html>
 <head>
 	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
 	<title>Kare Yapmaca</title>
-	<link rel="stylesheet" href="/css/reset.css" />
+	<!-- Normalize CSS -->
+	<link rel="stylesheet" href="/css/normalize.css" />
+	<!-- Custom CSS -->
 	<link rel="stylesheet" href="/css/style.css" />
+	<!-- Google Fonts -->
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu:400,700&amp;subset=latin-ext" rel="stylesheet">
+	<!-- Flexboxgrid -->
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/flexboxgrid/6.3.1/flexboxgrid.min.css" type="text/css" >
+	
 	<script type="text/javascript" src="/socket.io/socket.io.js"></script>
 	<script type="text/javascript" src="/js/jquery.js"></script>
 	<script type="text/javascript" src="/js/use.js"></script>
 </head>
 <body>
-	<div class="main">
+	<div class="row main">
 		<div class="board">
-			<div class="sira" style="width:100%;height:20%;text-align:center;background:yellow;color:#e36125"></div>
-			<div class="user1" style="width:100%;height:40%;text-align:center;background:#cc0033;color:#ddd"></div>
-			<div class="user2" style="width:100%;height:40%;text-align:center;background:#0066cc;color:#ddd"></div>
+			<div class="sira" style="text-align:center;background:#baf064;color:#fff"></div>
+			<div class="user1" style="text-align:center;background:#f03236;color:#fff"></div>
+			<div class="user2" style="text-align:center;background:#68b5f0;color:#fff"></div>
 		</div>
 		<div class="game">
 			
@@ -22,33 +31,88 @@
 		<div class="ad">
 			Reklam Alanı
 		</div>
-		<div class="firstLogin">
-			<input type="text" name="username" class="inputUserName" placeholder="Kullanıcı Adını Gir" />
-			<button class="loginButton">Login</button>
+		
+		<!-- Login Form -->
+		<div class="col-xs-12 login-form">
+			<div class="row center-xs middle-xs">
+				<div class="col-xs-10">
+					<input type="text" name="username" class="inputUserName" placeholder="Kullanıcı Adını Gir" />
+				</div>
+				<div class="col-xs-10">
+					<button class="loginButton">Login</button>
+				</div>
+			</div>
 		</div>
+		
+		<!-- Game Over -->
 		<div class="gameOver">
 			
 		</div>
-		<div class="anaMenu">
-			<div class="showUserName"></div>
-			<div class="arkadasinlaOyna">Arkadaşınla Oyna</div>
-			<div class="rastgeleOyna">Rastgele Oyna</div>
+		
+		<!-- Main Screen {eski anamenu}-->
+		<div class="col-xs-12 main-screen">
+			<div class="row">
+				<div class="col-xs-12 user-name"></div>
+				<div class="col-xs-12 quick-play">Hızlı Oyna</div>
+				<div class="col-xs-12 multi-play">Arkadaşınla Oyna</div>
+				<div class="col-xs-12 hakkinda">Hakkında</div>
+			</div>
 		</div>
-		<div class="anaMenu arkadasinlaOynaMenu">
-			<span>Oluştur butonuna tıkla ve bir oyun oluştur. Bu kodu arkadaşına gönder ve eğlen! </span>
-			<input type="text" class="createdCode" value="" />
-			<span>Karenin bir kenarı kaç birim olsun ? <select name="birim1" class="birim1">
-				<option value="3">3</option>
-				<option value="5">5</option>
-				<option value="7">7</option>
-				<option value="11">11</option>
-				<option value="13">13</option>
-				<option value="15">15</option>
-			</select></span>
-			<button class="arkadasinlaOynaYeniOlustur">Oluştur</button>
-			<h3>Veya</h3>
-			<input type="text" class="loginGameCode" placeholder="Kodunu Gir" value="" />
-			<button class="arkadasinlaOynaYeniOyunaKatil">Bir Oyuna Katıl</button>
+		
+		<!-- Set Up Game Screen -->
+		<div class="col-xs-12 play-with-friend">
+			<div class="row center-xs">
+				<div class="col-xs-10">
+					<!-- Title -->
+					<h2>
+						<span>Oluştur butonuna tıkla ve bir oyun oluştur. Bu kodu arkadaşına gönder ve eğlen! </span>
+					</h2>
+
+					<input type="text" class="createdCode" value="" />
+
+					<span>Karenin bir kenarı kaç birim olsun ? </span>
+
+					<select name="birim1" class="birim1">
+						<option value="3">3</option>
+						<option value="5">5</option>
+						<option value="7">7</option>
+						<option value="11">11</option>
+						<option value="13">13</option>
+						<option value="15">15</option>
+					</select>
+
+					<button class="arkadasinlaOynaYeniOlustur">Oluştur</button>
+
+					<h3>Veya</h3>
+
+					<input type="text" class="loginGameCode" placeholder="Kodunu Gir" value="" />
+
+					<button class="arkadasinlaOynaYeniOyunaKatil">Bir Oyuna Katıl</button>
+				</div>
+			</div>
+		</div>
+		
+		<div class="col-xs-12 play-with-quick">
+			<div class="row center-xs">
+				<div class="col-xs-10">
+					<h2>
+						<span>Rastgele Bir Rakibe Karşı Oyna!</span>
+					</h2>
+					<span>Karenin bir kenarı kaç birim olsun ? </span>
+					<select name="birim2" class="birim2">
+						<option value="3">3</option>
+						<option value="5">5</option>
+						<option value="7">7</option>
+						<option value="11">11</option>
+						<option value="13">13</option>
+						<option value="15">15</option>
+					</select>
+					<button class="rastgeleOyna">Bir Oyuna Katıl</button>
+				</div>
+			</div>
+		</div>
+		<div class="notificationSound">
+			<audio src="/files/notification.mp3" id="notification"></audio>
 		</div>
 	</div>
 </body>

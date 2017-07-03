@@ -4,9 +4,10 @@ var app = express();
 app.use("/js",express.static(__dirname+"/js"));
 app.use("/css",express.static(__dirname+"/css"));
 app.use("/pages",express.static(__dirname+"/pages"));
+app.use("/files",express.static(__dirname+"/files"));
 
-var server = app.listen(process.env.PORT);
-console.log("listening on port "+process.env.PORT);
+var server = app.listen(process.env.PORT || 85);
+console.log("listening on port "+(process.env.PORT || 85) );
 var roomNode = function(){
 	this.code = undefined;
 	this.user1 = undefined;
@@ -319,33 +320,40 @@ var rooms = new roomBl();
 io.sockets.on("connection",function(socket){
 	socket.on("login",function(data){
 		var username = data.username;
-		var socketId = socket.id;
-		if(users.getFromUsername(username) || users.getFromSocketId(socketId)){
-			io.to(socketId).emit("login",{"code":1});
+		if(username.length == 0){
+			io.to(socket.id).emit("alert",{"message":"Kullanıcı adı boş geçilemez!"});
 		}
 		else{
-			users.insert(username,socketId);
-			io.to(socketId).emit("login",{"code":0,"username":username});
+			var socketId = socket.id;
+			if(users.getFromUsername(username) || users.getFromSocketId(socketId)){
+				io.to(socketId).emit("login",{"code":1});
+			}
+			else{
+				users.insert(username,socketId);
+				io.to(socketId).emit("login",{"code":0,"username":username});
+			}
 		}
 	});
 	socket.on("createNewGameFriend",function(data){
 		socketId = socket.id;
 		var user = users.getFromSocketId(socketId);
-		var newRoomCode = createNewCode(3);
-		rooms.insert(user.username,data.size,newRoomCode);
-		var room = rooms.getFromCode(newRoomCode);
-		var game = new bl();
-		game.set(data.size);
-		game.create();
-		game.first();
-		room.game = game;
-		io.to(socketId).emit("waitFor",{"code":newRoomCode});
+		if(user != undefined){
+			var newRoomCode = createNewCode(3);
+			rooms.insert(user.username,data.size,newRoomCode);
+			var room = rooms.getFromCode(newRoomCode);
+			var game = new bl();
+			game.set(data.size);
+			game.create();
+			game.first();
+			room.game = game;
+			io.to(socketId).emit("waitFor",{"code":newRoomCode});
+		}
 	});
 	socket.on("loginRequest",function(data){
 		socketId = socket.id;
 		var user = users.getFromSocketId(socketId);
 		var room = rooms.getFromCode(data.code);
-		if(room != undefined && room.user2 == undefined){
+		if(room != undefined & room.user2 == undefined & room.user1 != user.username){
 			room.user2 = user.username;
 			io.to(users.getFromUsername(room.user1).socketId).emit("createGame",{"size":room.size,"user1":room.user1,"user2":room.user2,"user1Score":room.user1Score,"user2Score":room.user2Score,"sira":room.sira});
 			io.to(users.getFromUsername(room.user2).socketId).emit("createGame",{"size":room.size,"user1":room.user1,"user2":room.user2,"user1Score":room.user1Score,"user2Score":room.user2Score,"sira":room.sira});
@@ -373,6 +381,7 @@ io.sockets.on("connection",function(socket){
 			var controlUser = room.user2;
 		}
 		var scoreControl = 0;
+		var scoredXy = new Array();
 		if(user.username == controlUser){
 			var getNode = game.get(x,y);
 			if(direction == "rightLine"){
@@ -402,14 +411,16 @@ io.sockets.on("connection",function(socket){
 							getNode.bottomLine.active &
 								getNode.leftLine.active){
 									addScore++;
+									scoredXy[0] = {"x":x,"y":y};
 								}
-					if(y < room.size){
+					if(x < room.size){
 						getNode = game.get(x+1,y);
 						if(getNode.topLine.active &
 							getNode.rightLine.active &
 								getNode.bottomLine.active &
 									getNode.leftLine.active){
 										addScore++;
+										scoredXy[1] = {"x":x+1,"y":y};
 									}
 					}
 				}
@@ -420,14 +431,16 @@ io.sockets.on("connection",function(socket){
 							getNode.bottomLine.active &
 								getNode.leftLine.active){
 									addScore++;
+									scoredXy[0] = {"x":x,"y":y};
 								}
-					if(x < room.size){
+					if(y < room.size){
 						getNode = game.get(x,y+1);
 						if(getNode.topLine.active &
 							getNode.rightLine.active &
 								getNode.bottomLine.active &
 									getNode.leftLine.active){
 										addScore++;
+										scoredXy[1] = {"x":x,"y":y+1};
 									}
 					}
 				}
@@ -438,18 +451,26 @@ io.sockets.on("connection",function(socket){
 					else{
 						room.user2Score += addScore;
 					}
-					io.to(users.getFromUsername(room.user1).socketId).emit("updateGame",{"user1":room.user1,"user2":room.user2,"user1Score":room.user1Score,"user2Score":room.user2Score,"sira":room.sira,"x":x,"y":y,"direction":direction,"change":true,"siraChange":false});
-					io.to(users.getFromUsername(room.user2).socketId).emit("updateGame",{"user1":room.user1,"user2":room.user2,"user1Score":room.user1Score,"user2Score":room.user2Score,"sira":room.sira,"x":x,"y":y,"direction":direction,"change":true,"siraChange":false});
+					if(room.sira == 1){
+						io.to(users.getFromUsername(room.user1).socketId).emit("updateGame",{"user1":room.user1,"user2":room.user2,"user1Score":room.user1Score,"user2Score":room.user2Score,"sira":room.sira,"x":x,"y":y,"direction":direction,"change":true,"siraChange":false,"scoredXy":scoredXy,"yourTurn":true});
+						io.to(users.getFromUsername(room.user2).socketId).emit("updateGame",{"user1":room.user1,"user2":room.user2,"user1Score":room.user1Score,"user2Score":room.user2Score,"sira":room.sira,"x":x,"y":y,"direction":direction,"change":true,"siraChange":false,"scoredXy":scoredXy,"yourTurn":false});
+					}
+					else{
+						io.to(users.getFromUsername(room.user1).socketId).emit("updateGame",{"user1":room.user1,"user2":room.user2,"user1Score":room.user1Score,"user2Score":room.user2Score,"sira":room.sira,"x":x,"y":y,"direction":direction,"change":true,"siraChange":false,"scoredXy":scoredXy,"yourTurn":false});
+						io.to(users.getFromUsername(room.user2).socketId).emit("updateGame",{"user1":room.user1,"user2":room.user2,"user1Score":room.user1Score,"user2Score":room.user2Score,"sira":room.sira,"x":x,"y":y,"direction":direction,"change":true,"siraChange":false,"scoredXy":scoredXy,"yourTurn":true});
+					}
 				}
 				else{
 					if(room.sira == 1){
 						room.sira = 2;
+						io.to(users.getFromUsername(room.user1).socketId).emit("updateGame",{"user1":room.user1,"user2":room.user2,"user1Score":room.user1Score,"user2Score":room.user2Score,"sira":room.sira,"x":x,"y":y,"direction":direction,"change":true,"siraChange":true,"scoredXy":scoredXy,"yourTurn":false});
+						io.to(users.getFromUsername(room.user2).socketId).emit("updateGame",{"user1":room.user1,"user2":room.user2,"user1Score":room.user1Score,"user2Score":room.user2Score,"sira":room.sira,"x":x,"y":y,"direction":direction,"change":true,"siraChange":true,"scoredXy":scoredXy,"yourTurn":true});
 					}
 					else{
 						room.sira = 1;
+						io.to(users.getFromUsername(room.user1).socketId).emit("updateGame",{"user1":room.user1,"user2":room.user2,"user1Score":room.user1Score,"user2Score":room.user2Score,"sira":room.sira,"x":x,"y":y,"direction":direction,"change":true,"siraChange":true,"scoredXy":scoredXy,"yourTurn":true});
+						io.to(users.getFromUsername(room.user2).socketId).emit("updateGame",{"user1":room.user1,"user2":room.user2,"user1Score":room.user1Score,"user2Score":room.user2Score,"sira":room.sira,"x":x,"y":y,"direction":direction,"change":true,"siraChange":true,"scoredXy":scoredXy,"yourTurn":false});
 					}
-					io.to(users.getFromUsername(room.user1).socketId).emit("updateGame",{"user1":room.user1,"user2":room.user2,"user1Score":room.user1Score,"user2Score":room.user2Score,"sira":room.sira,"x":x,"y":y,"direction":direction,"change":true,"siraChange":true});
-					io.to(users.getFromUsername(room.user2).socketId).emit("updateGame",{"user1":room.user1,"user2":room.user2,"user1Score":room.user1Score,"user2Score":room.user2Score,"sira":room.sira,"x":x,"y":y,"direction":direction,"change":true,"siraChange":true});
 				}
 				if((room.user1Score + room.user2Score) == room.size * room.size){
 					rooms.deleteFromUsername(room.user1);
@@ -470,12 +491,14 @@ io.sockets.on("connection",function(socket){
 			else{
 				if(game.sira == 1){
 					game.sira = 2;
+					io.to(users.getFromUsername(room.user1).socketId).emit("updateGame",{"user1":room.user1,"user2":room.user2,"user1Score":room.user1Score,"user2Score":room.user2Score,"sira":room.sira,"x":x,"y":y,"direction":direction,"change":false,"siraChange":true,"scoredXy":scoredXy,"yourTurn":false});
+					io.to(users.getFromUsername(room.user2).socketId).emit("updateGame",{"user1":room.user1,"user2":room.user2,"user1Score":room.user1Score,"user2Score":room.user2Score,"sira":room.sira,"x":x,"y":y,"direction":direction,"change":false,"siraChange":true,"scoredXy":scoredXy,"yourTurn":true});
 				}
 				else{
 					game.sira = 1;
+					io.to(users.getFromUsername(room.user1).socketId).emit("updateGame",{"user1":room.user1,"user2":room.user2,"user1Score":room.user1Score,"user2Score":room.user2Score,"sira":room.sira,"x":x,"y":y,"direction":direction,"change":false,"siraChange":true,"scoredXy":scoredXy,"yourTurn":true});
+					io.to(users.getFromUsername(room.user2).socketId).emit("updateGame",{"user1":room.user1,"user2":room.user2,"user1Score":room.user1Score,"user2Score":room.user2Score,"sira":room.sira,"x":x,"y":y,"direction":direction,"change":false,"siraChange":true,"scoredXy":scoredXy,"yourTurn":false});
 				}
-				io.to(users.getFromUsername(room.user1).socketId).emit("updateGame",{"user1":room.user1,"user2":room.user2,"user1Score":room.user1Score,"user2Score":room.user2Score,"sira":room.sira,"x":x,"y":y,"direction":direction,"change":false,"siraChange":true});
-				io.to(users.getFromUsername(room.user2).socketId).emit("updateGame",{"user1":room.user1,"user2":room.user2,"user1Score":room.user1Score,"user2Score":room.user2Score,"sira":room.sira,"x":x,"y":y,"direction":direction,"change":false,"siraChange":true});
 			}
 		}
 		

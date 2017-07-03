@@ -1,3 +1,32 @@
+/**  **/
+body {
+	font-family: 'Ubuntu', sans-serif;
+	background: linear-gradient(135deg,#00c4cc 25%,#49beb8 75%);
+	background-attachment: fixed;
+}
+input,button {
+	outline: none;
+	border: none;
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+	border-radius: 3px;
+}
+
+ul,li,h1,h2,h3,h4,h5,h6,h7 {
+	padding: 0;
+	margin: 0;
+}
+
+ul,li {
+	list-style: none;
+}
+
+a {
+	text-decoration: none;
+}
+
+/** **/
 .dikCizgiActive{
 	background:#121212;
 	position:absolute;
@@ -40,78 +69,134 @@
 	z-index:10;
 }
 .main{
-	width:100%;
-	height:100%;
+	padding: 0;
+	margin: 0;
 }
 .game{
 	position:relative;
 	float:left;
 	display:none;
+	background:#121212;
 }
-.firstLogin{
-	background:#4352a3;
-	width:60%;
-	height:90%;
-	margin:0 auto;
-	float:none;
-	padding:5%;
-}
-.inputUserName{
-	width:80%;
-	border:0;
-	padding:2.5%;
-	float:none;
-	margin:0 auto;
-	display:block;
-	height:40px;
-}
-.loginButton,.anaMenuyeDon{
-	width:90%;
-	height:40px;
-	font-size:20px;
-	border:0;
-	display:block;
-	margin:0 auto;
-	float:none;
-	margin-top:20px;
-	color:#ddd;
-	background:#b22035;
-	cursor:pointer;
-}
-.anaMenu{
-	width:100%;
-	height:100%;
-	background:#1b75bb;
+/* Login Form */
+.login-form {
+	padding: 20px;
 	display:none;
 }
-.arkadasinlaOyna{
-	width:90%;
-	height:5%;
-	padding:5%;
-	color:#fff;
-	text-align:center;
-	font-size:100%;
-	cursor:pointer;
-	background:#f68a1e;
+
+	.inputUserName{
+		padding: 12px 10px;
+		background: #fff;
+		color: #555;
+		width: 100%;
+		border: 1px solid #eee;
+		transition: .5s all;
+	}
+
+	.inputUserName:focus {
+		box-shadow: 0 0 15px 0px rgba(182, 40, 11, 0.73);
+	}
+	.loginButton,.anaMenuyeDon{
+		background: rgba(182, 40, 11, 0.73);
+		color: #fff;
+		font-size: 18px;
+		font-weight: 700;
+		padding: 10px;
+		margin: 5px;
+		width: 98%;
+		cursor: pointer;
+	}
+	
+/* Main Screen */	
+.main-screen{
+	display:none;
 }
-.rastgeleOyna{
-	width:90%;
-	height:5%;
-	padding:5%;
-	color:#fff;
-	text-align:center;
-	font-size:100%;
-	cursor:pointer;
-	background:#b22035;
-}
-.arkadasinlaMenu,.rastGeleMenu{
+	.user-name, .multi-play, .quick-play{
+		padding: 30px 0;
+		text-align: center;
+		font-size: 32px;
+		font-weight: 700;
+		color: #fff;
+		box-shadow: 0 0 1px 1px rgba(0,0,0,.1);
+		text-shadow: 0 1px 10px rgba(0,0,0,.2);
+		cursor:pointer;
+	}
+	.sira,.user1,.user2{
+		padding: 20px 0;
+		text-align: center;
+		font-size: 12px;
+		font-weight: 700;
+		color: #fff;
+		box-shadow: 0 0 1px 1px rgba(0,0,0,.1);
+		text-shadow: 0 1px 10px rgba(0,0,0,.2);
+	}
+	.user-name {
+		background: #baf064;
+	}
+	.quick-play {
+		background: #f03236;
+		cursor:pointer;
+	}
+	.quick-play:hover{
+		background:#ff3236;
+	}
+	.multi-play {
+		cursor:pointer;
+		background: #68b5f0;
+	}
+	.multi-play:hover{
+		background:#88b5f0;
+	}
+
+.rastGeleMenu{
 	display:block;
 	width:100%;
 	height:25%;
 	text-align:center;
 }
-.arkadasinlaOynaMenu{
-	
+
+/* Plat with Friend */
+.play-with-friend {
+	padding: 100px;
+	display:none;
+}
+.play-with-friend input, .play-with-friend button,.play-with-friend select  {
+	width: 100%;
+	padding: 15px 5px;
+	margin: 10px 0;
+	border: 1px solid #ccc;
+}
+.play-with-friend button {
+	background: rgba(182, 40, 11, 0.73);
+	color: #fff;
+	border: none;
+	display: block;
+	padding: 0 ;
+}
+
+.play-with-quick {
+	padding: 100px;
+	display:none;
+}
+.play-with-quick input, .play-with-quick button,.play-with-quick select  {
+	width: 100%;
+	padding: 15px 5px;
+	margin: 10px 0;
+	border: 1px solid #ccc;
+}
+.play-with-quick button {
+	background: rgba(182, 40, 11, 0.73);
+	color: #fff;
+	border: none;
+	display: block;
+	padding: 0 ;
+}
+.back{
+	width:200px;
+	height:20px;
+	background:rgba(182, 40, 11, 0.73);
+	position:absolute;
+	right:0;
 }
 .createdCode{
 	width:80%;
@@ -132,7 +217,6 @@
 	height:10%;
 	color:#f68a1e;
 	text-align:center;
-	font-family:Verdana;
 	float:none;
 	margin:0 auto;
 }
@@ -142,7 +226,6 @@
 	height:10%;
 	color:#f68a1e;
 	text-align:center;
-	font-family:Verdana;
 	float:none;
 	margin:0 auto;
 }
@@ -160,14 +243,7 @@
 	cursor:pointer;
 }
 
-.showUserName{
-	width:90%;
-	height:5%;
-	padding:5%;
-	color:#fff;
-	text-align:center;
-	font-size:100%;
-}
+
 .board{
 	display:none;
 }
@@ -183,7 +259,10 @@
 	padding:5%;
 	display:none;
 	position:absolute;
-	z-index:50;
+	z-index:999;
 	left:15%;
 	top:25%;
+}
+.notificationSound{
+	display:none;
 }
