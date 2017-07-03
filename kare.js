@@ -127,7 +127,6 @@ var userBl = function(){
 			}
 			temp = temp.next;
 		}
-		return false;
 	}
 	this.getFromSocketId = function(socketId){
 		var temp = this.root;
@@ -137,7 +136,6 @@ var userBl = function(){
 			}
 			temp = temp.next;
 		}
-		return false;
 	}
 	this.deleteFromUsername = function(username){
 		var temp = this.root;
@@ -300,7 +298,6 @@ var bl = function(){
 			}
 			temp = temp.next;
 		}
-		return undefined;
 	}
 }
 function createNewCode(uzunluk) {
@@ -352,7 +349,15 @@ io.sockets.on("connection",function(socket){
 	socket.on("loginRequest",function(data){
 		socketId = socket.id;
 		var user = users.getFromSocketId(socketId);
+		if(user == undefined){
+			io.to(socketId).emit("alert",{"message":"Lütfen uygulamayı yeniden başlatın."});
+			return;
+		}
 		var room = rooms.getFromCode(data.code);
+		if(room == undefined){
+			io.to(socketId).emit("alert",{"message":"Oda bulunamadı."});
+			return;
+		}
 		if(room != undefined & room.user2 == undefined & room.user1 != user.username){
 			room.user2 = user.username;
 			io.to(users.getFromUsername(room.user1).socketId).emit("createGame",{"size":room.size,"user1":room.user1,"user2":room.user2,"user1Score":room.user1Score,"user2Score":room.user2Score,"sira":room.sira});

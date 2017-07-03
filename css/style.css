@@ -60,6 +60,14 @@ a {
 	background:#c00 !important;
 	z-index:30;
 }
+.momentaryActive{
+	background:red;
+	z-index:21;
+}
+.momentaryDeactive{
+	background:#ddd;
+	z-index:21;
+}
 .lineOver{
 	background:#c00;
 	z-index:30;

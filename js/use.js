@@ -362,19 +362,7 @@ socket.on("updateGame",function(data){
 			else if(data.sira == 2){
 				$(".sira").html("Sıra <b>"+data.user2+ "</b> adlı kullanıcının");
 			}
-			if(data.direction == "bottomLine"){
-				var cizgi = $(".yanCizgiDeActive[data-cizgiSec='"+data.x+"-"+data.y+"_bottomLine']");
-				cizgi.removeClass("yanCizgiDeActive");
-				cizgi.addClass("yanCizgiActive");
-			}
-			else if(data.direction == "rightLine"){
-				var cizgi = $(".dikCizgiDeActive[data-cizgiSec='"+data.x+"-"+data.y+"_rightLine']");
-				cizgi.removeClass("dikCizgiDeActive");
-				cizgi.addClass("dikCizgiActive");
-			}
-			signLine(cizgi);
-			$(cizgi).removeClass("lineOver");
-			$(cizgi).removeClass("lineOut");
+			signLine(data.x,data.y,data.direction);
 			for(var i=0;i<data.scoredXy.length;i++){
 				if(data.scoredXy[i] != null & data.scoredXy[i] != undefined ){
 					if(data.sira == 1){
@@ -397,7 +385,56 @@ socket.on("updateGame",function(data){
 	}
 });
 function signLine(x,y,direction){
-	
+	$(document).ready(function(){
+		if(direction == "bottomLine"){
+			var cizgi = $(".yanCizgiDeActive[data-cizgiSec='"+x+"-"+y+"_bottomLine']");
+			var counter = 0;
+			var animate = setInterval(function(){
+				if(counter % 2  == 0){
+					cizgi.addClass("momentaryActive");
+					cizgi.removeClass("momentaryDeactive");
+				}
+				else{
+					cizgi.addClass("momentaryDeactive");
+					cizgi.removeClass("momentaryActive");
+				}
+				counter++;
+				if(counter == 10){
+					clearInterval(animate);
+					cizgi.removeClass("momentaryDeactive");
+					cizgi.removeClass("momentaryActive");
+				}
+			},75);
+			cizgi.removeClass("yanCizgiDeActive");
+			cizgi.addClass("yanCizgiActive");
+			cizgi.removeClass("lineOver");
+			cizgi.removeClass("lineOut");
+		}
+		else if(direction == "rightLine"){
+			var cizgi = $(".dikCizgiDeActive[data-cizgiSec='"+x+"-"+y+"_rightLine']");
+			var counter = 0;
+			var animate = setInterval(function(){
+				if(counter % 2  == 0){
+					cizgi.addClass("momentaryActive");
+					cizgi.removeClass("momentaryDeactive");
+				}
+				else{
+					cizgi.addClass("momentaryDeactive");
+					cizgi.removeClass("momentaryActive");
+				}
+				counter++;
+				if(counter == 10){
+					clearInterval(animate);
+					cizgi.removeClass("momentaryDeactive");
+					cizgi.removeClass("momentaryActive");
+				}
+			},75);
+			cizgi.removeClass("dikCizgiDeActive");
+			cizgi.addClass("dikCizgiActive");
+			cizgi.removeClass("lineOver");
+			cizgi.removeClass("lineOut");
+		}
+	});
 }
 socket.on("lineOvered",function(data){
 	var x = data.x;
