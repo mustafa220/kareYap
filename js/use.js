@@ -3,6 +3,14 @@ var firstLogin = false;
 var logined = false;
 var windowWidth = $(window).width();
 var windowHeight = $(window).height();
+/*
+	anyMenu
+		0 : loginFrm
+		1 : mainScreen
+		2 : playWithFriend
+		3 : playWithQuick
+		4 : about
+*/
 if(!firstLogin){
 	$(document).ready(function(){
 		$(".login-form").show();
@@ -17,8 +25,8 @@ socket.on("alert",function(data){
 socket.on("login",function(data){
 	if(data.code == 0){
 		$(document).ready(function(){
-			$(".login-form").hide();
-			$(".main-screen").show();
+			$(".anyMenu").hide();
+			$(".anyMenu:eq(1)").show();
 			$(".user-name").html("Hoşgeldiniz " + data.username);
 			logined = true;
 		});
@@ -307,13 +315,18 @@ var bl = function(){
 	}
 }
 $(document).ready(function(){
+	$(".play-with-friend button").css("height",windowHeight*0.1+"px");
 	$(".multi-play").click(function(){
-		$(".main-screen").hide();
-		$(".play-with-friend").show();
+		$(".anyMenu").hide();
+		$(".anyMenu:eq(2)").show();
 	});
 	$(".quick-play").click(function(){
-		$(".main-screen").hide();
-		$(".play-with-quick").show();
+		$(".anyMenu").hide();
+		$(".anyMenu:eq(3)").show();
+	});
+	$(".hakkinda").click(function(){
+		$(".anyMenu").hide();
+		$(".anyMenu:eq(4)").show();
 	});
 	$(".arkadasinlaOynaYeniOlustur").click(function(){
 		socket.emit("createNewGameFriend",{"size":$(".birim1").val()});
@@ -321,6 +334,10 @@ $(document).ready(function(){
 	$(".arkadasinlaOynaYeniOyunaKatil").click(function(){
 		var code = $(".loginGameCode").val();
 		socket.emit("loginRequest",{"code":code});
+	});
+	$(".anaMenuyeDon").click(function(){
+		$(".anyMenu").hide();
+		$(".anyMenu:eq(1)").show();
 	});
 });
 socket.on("waitFor",function(data){
@@ -340,7 +357,7 @@ socket.on("createGame",function(data){
 	$(".game").show();
 	$(".ad").show();
 	$(document).ready(function(){
-		$(".play-with-friend").hide();
+		$(".anyMenu").hide();
 		$(".user1").html(data.user1+ " : "+data.user1Score);
 		$(".user2").html(data.user2+ " : "+data.user2Score);
 		if(data.sira == 1){
@@ -471,7 +488,7 @@ function anaMenuyeDon(){
 	$(".game").hide();
 	$(".ad").hide();
 	$(".gameOver").hide();
-	$(".main-screen").show();
+	$(".anyMenu:eq(1)").show();
 }
 function process(line){
 	$(document).ready(function(){
@@ -599,6 +616,3 @@ function lineOut(line){
 		socket.emit("lineOut",{"x":x,"y":y,"direction":direction});
 	});
 }
-$(document).ready(function(){
-	
-});

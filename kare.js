@@ -21,6 +21,7 @@ var roomNode = function(){
 	this.next = undefined;
 }
 var roomBl = function(){
+	this.length = 0;
 	this.root = undefined;
 	this.last = undefined;
 	this.insert = function(username,size,code){
@@ -36,6 +37,7 @@ var roomBl = function(){
 		newNode.user1 = username;
 		newNode.size = size;
 		newNode.code = code;
+		this.length++;
 	}
 	this.getFromCode = function(code){
 		var temp = this.root;
@@ -58,9 +60,9 @@ var roomBl = function(){
 	this.deleteFromUsername = function(username){
 		var temp = this.root;
 		if(temp != undefined){
-			
 			if(this.root.user1 == username | this.root.user2 == username){
 				this.root = this.root.next;
+				this.length--;
 			}
 			else{
 				prev = temp;
@@ -74,6 +76,7 @@ var roomBl = function(){
 						else{
 							prev.next = temp.next;
 						}
+						this.length--;
 						break;
 						
 					}
@@ -85,6 +88,7 @@ var roomBl = function(){
 						else{
 							prev.next = temp.next;
 						}
+						this.length--;
 						break;
 					}
 					else{
@@ -105,6 +109,7 @@ var userNode = function(username,socketId){
 var userBl = function(){
 	this.root = undefined;
 	this.last = undefined;
+	this.length = 0;
 	this.insert = function(username,socketId){
 		if(this.getFromUsername(username) || this.getFromSocketId(socketId)){
 			return false;
@@ -118,6 +123,7 @@ var userBl = function(){
 			this.last.next = newNode;
 			this.last = newNode;
 		}
+		this.length++;
 	}
 	this.getFromUsername = function(username){
 		var temp = this.root;
@@ -142,6 +148,7 @@ var userBl = function(){
 		if(temp != undefined){
 			if(this.root.username == username){
 				this.root = this.root.next;
+				this.length--;
 			}
 			else{
 				prev = temp;
@@ -155,6 +162,7 @@ var userBl = function(){
 						else{
 							prev.next = temp.next;
 						}
+						this.length--;
 						break;
 					}
 					else{
@@ -170,6 +178,7 @@ var userBl = function(){
 		if(temp != undefined){
 			if(this.root.socketId == socketId){
 				this.root = this.root.next;
+				this.length--;
 			}
 			else{
 				prev = temp;
@@ -183,6 +192,7 @@ var userBl = function(){
 						else{
 							prev.next = temp.next;
 						}
+						this.length--;
 						break;
 					}
 					else{
@@ -212,7 +222,7 @@ var node = function(){
 	this.y = 0;
 }
 var bl = function(){
-	this.size = 2;
+	this.size = 0;
 	this.x = 0;
 	this.y = 0;
 	this.root = undefined;
@@ -335,6 +345,7 @@ io.sockets.on("connection",function(socket){
 		socketId = socket.id;
 		var user = users.getFromSocketId(socketId);
 		if(user != undefined){
+			rooms.deleteFromUsername(user.username);
 			var newRoomCode = createNewCode(3);
 			rooms.insert(user.username,data.size,newRoomCode);
 			var room = rooms.getFromCode(newRoomCode);
@@ -344,6 +355,9 @@ io.sockets.on("connection",function(socket){
 			game.first();
 			room.game = game;
 			io.to(socketId).emit("waitFor",{"code":newRoomCode});
+		}
+		else{
+			io.to(socketId).emit("alert",{"message":"Lütfen uygulamayı yeniden başlatın."});
 		}
 	});
 	socket.on("loginRequest",function(data){
@@ -359,6 +373,7 @@ io.sockets.on("connection",function(socket){
 			return;
 		}
 		if(room != undefined & room.user2 == undefined & room.user1 != user.username){
+			rooms.deleteFromUsername(user.username);
 			room.user2 = user.username;
 			io.to(users.getFromUsername(room.user1).socketId).emit("createGame",{"size":room.size,"user1":room.user1,"user2":room.user2,"user1Score":room.user1Score,"user2Score":room.user2Score,"sira":room.sira});
 			io.to(users.getFromUsername(room.user2).socketId).emit("createGame",{"size":room.size,"user1":room.user1,"user2":room.user2,"user1Score":room.user1Score,"user2Score":room.user2Score,"sira":room.sira});
@@ -371,10 +386,12 @@ io.sockets.on("connection",function(socket){
 		var socketId = socket.id;
 		var user = users.getFromSocketId(socketId);
 		if(user == undefined){
+			io.to(socketId).emit("alert",{"message":"Lütfen uygulamayı yeniden başlatın."});
 			return false;
 		}
 		var room = rooms.getFromUsername(user.username);
 		if(room == undefined){
+			io.to(socketId).emit("alert",{"message":"Oda bulunamadı."});
 			return false;
 		}
 		var game = room.game;
@@ -387,6 +404,9 @@ io.sockets.on("connection",function(socket){
 		}
 		var scoreControl = 0;
 		var scoredXy = new Array();
+		if(x < 0 | y < 0 | x > game.size | y > game.size){
+			return false;
+		}
 		if(user.username == controlUser){
 			var getNode = game.get(x,y);
 			if(direction == "rightLine"){
@@ -522,6 +542,9 @@ io.sockets.on("connection",function(socket){
 			return false;
 		}
 		var game = room.game;
+		if(x < 0 | y < 0 | x > game.size | y > game.size){
+			return false;
+		}
 		var getNode = game.get(x,y);
 		var controlledLine = false;
 		if(direction == "rightLine" & !getNode.rightLine.active){ controlledLine = true; }
@@ -551,6 +574,9 @@ io.sockets.on("connection",function(socket){
 			return false;
 		}
 		var game = room.game;
+		if(x < 0 | y < 0 | x > game.size | y > game.size){
+			return false;
+		}
 		var getNode = game.get(x,y);
 		var controlledLine = false;
 		if(direction == "rightLine" & !getNode.rightLine.active){ controlledLine = true;}
