@@ -1,0 +1,215 @@
+/**  **/
+body {
+	font-family: 'Ubuntu', sans-serif;
+	background: linear-gradient(135deg,#00c4cc 25%,#49beb8 75%);
+	background-attachment: fixed;
+}
+input,button {
+	outline: none;
+	border: none;
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+	border-radius: 3px;
+}
+
+ul,li,h1,h2,h3,h4,h5,h6,h7 {
+	padding: 0;
+	margin: 0;
+}
+
+ul,li {
+	list-style: none;
+}
+
+a {
+	text-decoration: none;
+}
+
+/** **/
+.dikCizgiActive{
+	background:#121212;
+	position:absolute;
+	z-index:20;
+}
+.dikCizgiDeActive{
+	position:absolute;
+	background:#ddd;
+	cursor:pointer;
+	z-index:10;
+}
+.dikCizgiDeActive:hover{
+	background:#c00 !important;
+	z-index:30;
+}
+.yanCizgiActive{
+	background:#121212;
+	position:absolute;
+	z-index:20;
+}
+.yanCizgiActive:hover{
+	z-index:999;
+}
+.yanCizgiDeActive{
+	position:absolute;
+	background:#ddd;
+	cursor:pointer;
+	z-index:10;
+}
+.yanCizgiDeActive:hover{
+	background:#c00 !important;
+	z-index:30;
+}
+.momentaryActive{
+	background:red;
+	z-index:21;
+}
+.momentaryDeactive{
+	background:#ddd;
+	z-index:21;
+}
+.lineOver{
+	background:#c00;
+	z-index:30;
+}
+.lineOut{
+	background:#ddd;
+	z-index:10;
+}
+.main{
+	padding: 0;
+	margin: 0;
+}
+.game{
+	position:relative;
+	float:left;
+	display:none;
+	background:#121212;
+}
+/* Login Form */
+.login-form {
+	padding: 20px;
+	display:none;
+}
+
+	.inputUserName{
+		padding: 12px 10px;
+		background: #fff;
+		color: #555;
+		width: 100%;
+		border: 1px solid #eee;
+		transition: .5s all;
+	}
+
+	.inputUserName:focus {
+		box-shadow: 0 0 15px 0px rgba(182, 40, 11, 0.73);
+	}
+	.loginButton,.anaMenuyeDon{
+		background: rgba(182, 40, 11, 0.73);
+		color: #fff;
+		font-size: 18px;
+		font-weight: 700;
+		padding: 10px;
+		margin: 5px;
+		width: 98%;
+		cursor: pointer;
+	}
+	
+/* Main Screen */	
+.main-screen{
+	display:none;
+}
+	.user-name, .multi-play, .quick-play,.hakkinda{
+		padding: 30px 0;
+		text-align: center;
+		font-size: 32px;
+		font-weight: 700;
+		color: #fff;
+		box-shadow: 0 0 1px 1px rgba(0,0,0,.1);
+		text-shadow: 0 1px 10px rgba(0,0,0,.2);
+		cursor:pointer;
+	}
+	.sira,.user1,.user2{
+		padding: 20px 0;
+		text-align: center;
+		font-size: 12px;
+		font-weight: 700;
+		color: #fff;
+		box-shadow: 0 0 1px 1px rgba(0,0,0,.1);
+		text-shadow: 0 1px 10px rgba(0,0,0,.2);
+	}
+	.user-name {
+		background: #baf064;
+	}
+	.quick-play {
+		background: #f03236;
+		cursor:pointer;
+	}
+	.quick-play:hover{
+		background:#ff3236;
+	}
+	.multi-play {
+		cursor:pointer;
+		background: #68b5f0;
+	}
+	.multi-play:hover{
+		background:#88b5f0;
+	}
+
+/* Plat with Friend */
+.play-with-friend {
+	padding: 100px;
+	display:none;
+}
+.play-with-friend input, .play-with-friend button,.play-with-friend select  {
+	width: 100%;
+	padding: 15px 5px;
+	margin: 10px 0;
+	border: 1px solid #ccc;
+}
+.play-with-friend button {
+	background: rgba(182, 40, 11, 0.73);
+	color: #fff;
+	border: none;
+	display: block;
+	padding: 0 ;
+	cursor:pointer;
+}
+.createdCode{
+	width:80%;
+	height:10%;
+	float:none;
+	margin:0 auto;
+}
+.loginGameCode{
+	width:80%;
+	height:10%;
+	float:none;
+	margin:0 auto;
+}
+.anaMenuyeDon{
+	cursor:pointer;
+	background:#f03236 !important;
+}
+.board{
+	display:none;
+}
+.ad{
+	display:none;
+}
+.gameOver{
+	background:#4352a3;
+	width:60%;
+	height:50%;
+	margin:0 auto;
+	float:none;
+	padding:5%;
+	display:none;
+	position:absolute;
+	z-index:999;
+	left:15%;
+	top:25%;
+}
+.notificationSound{
+	display:none;
+}

@@ -354,6 +354,9 @@ io.sockets.on("connection",function(socket){
 			game.create();
 			game.first();
 			room.game = game;
+			if(game == undefined){
+				return false;
+			}
 			io.to(socketId).emit("waitFor",{"code":newRoomCode});
 		}
 		else{

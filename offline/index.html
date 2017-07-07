@@ -6,17 +6,15 @@
 	
 	<title>Kare Yapmaca</title>
 	<!-- Normalize CSS -->
-	<link rel="stylesheet" href="/css/normalize.css" />
+	<link rel="stylesheet" href="css/normalize.css" />
 	<!-- Custom CSS -->
-	<link rel="stylesheet" href="/css/style.css" />
+	<link rel="stylesheet" href="css/style.css" />
 	<!-- Google Fonts -->
 	<link href="https://fonts.googleapis.com/css?family=Ubuntu:400,700&amp;subset=latin-ext" rel="stylesheet">
 	<!-- Flexboxgrid -->
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/flexboxgrid/6.3.1/flexboxgrid.min.css" type="text/css" >
-	
-	<script type="text/javascript" src="/socket.io/socket.io.js"></script>
-	<script type="text/javascript" src="/js/jquery.js"></script>
-	<script type="text/javascript" src="/js/use.js"></script>
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/use.js"></script>
 </head>
 <body>
 	<div class="row main">
@@ -52,8 +50,7 @@
 		<!-- Main Screen {eski anamenu}-->
 		<div class="col-xs-12 anyMenu main-screen">
 			<div class="row">
-				<div class="col-xs-12 user-name"></div>
-				<div class="col-xs-12 quick-play">Hızlı Oyna</div>
+				<div class="col-xs-12 quick-play">Bilgisayara Karşı Oyna</div>
 				<div class="col-xs-12 multi-play">Arkadaşınla Oyna</div>
 				<div class="col-xs-12 hakkinda">Hakkında</div>
 			</div>
@@ -65,11 +62,8 @@
 				<div class="col-xs-10">
 					<!-- Title -->
 					<h2>
-						<span>Oluştur butonuna tıkla ve bir oyun oluştur. Bu kodu arkadaşına gönder ve eğlen! </span>
+						<span>Arkadaşınla telefonunda karşılıklı oyna! </span>
 					</h2>
-
-					<input type="text" class="createdCode" value="" />
-
 					<span>Karenin bir kenarı kaç birim olsun ? </span>
 
 					<select name="birim1" class="birim1">
@@ -80,11 +74,7 @@
 						<option value="13">13</option>
 						<option value="15">15</option>
 					</select>
-
 					<button class="arkadasinlaOynaYeniOlustur">Oluştur</button>
-					<h3>Veya</h3>
-					<input type="text" class="loginGameCode" placeholder="Kodunu Gir" value="" />
-					<button class="arkadasinlaOynaYeniOyunaKatil">Bir Oyuna Katıl</button>
 					<button class="anaMenuyeDon">Ana Menüye Dön</button>
 				</div>
 			</div>
@@ -93,9 +83,19 @@
 			<div class="row center-xs">
 				<div class="col-xs-10">
 					<h2>
-						<span>Rastgele Bir Rakibe Karşı Oyna!</span>
+						<span>Bilgisayara Karşı Oyna!</span>
 					</h2>
-					<button class="playRandom">Tıkla ve Rakibini Bekle!</button>
+					<span>Karenin bir kenarı kaç birim olsun ? </span>
+
+					<select name="birim2" class="birim2">
+						<option value="3">3</option>
+						<option value="5">5</option>
+						<option value="7">7</option>
+						<option value="11">11</option>
+						<option value="13">13</option>
+						<option value="15">15</option>
+					</select>
+					<button class="playRandom">Oyna!</button>
 					<button class="anaMenuyeDon">Ana Menüye Dön</button>
 				</div>
 			</div>
