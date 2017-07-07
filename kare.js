@@ -6,8 +6,52 @@ app.use("/css",express.static(__dirname+"/css"));
 app.use("/pages",express.static(__dirname+"/pages"));
 app.use("/files",express.static(__dirname+"/files"));
 
-var server = app.listen(process.env.PORT || 85);
-console.log("listening on port "+(process.env.PORT || 85) );
+var server = app.listen(process.env.PORT || 80);
+console.log("listening on port "+(process.env.PORT || 80) );
+var randomPlay = function(){
+	this.user1 = undefined;
+	this.user2 = undefined;
+	this.fill = function(user){
+		if(this.user1 == undefined){
+			this.user1 = user;
+			if(this.user2 == undefined){
+				return false;
+			}
+		}
+		else if(this.user2 == undefined){
+			this.user2 = user;
+			if(this.user1 == undefined){
+				return false;
+			}
+		}
+		if(this.user1 != undefined & this.user2 != undefined){
+			this.play();
+			this.fill(user);
+			return true;
+		}
+	}
+	this.play = function(){
+		var randomRoomCode = createNewCode();
+		var sizes = new Array(5,7,11,13);
+		rooms.insert(this.user1.username,sizes[Math.floor(Math.random() * sizes.length)],randomRoomCode);
+		var randomRoom = rooms.getFromCode(randomRoomCode);
+		rooms.deleteFromUsername(this.user2.username);
+		randomRoom.user2 = this.user2.username;
+		var game = new bl();
+		game.set(randomRoom.size);
+		game.create();
+		game.first();
+		randomRoom.game = game;
+		if(game == undefined){
+			return false;
+		}
+		io.to(users.getFromUsername(randomRoom.user1).socketId).emit("createGame",{"size":randomRoom.size,"user1":randomRoom.user1,"user2":randomRoom.user2,"user1Score":randomRoom.user1Score,"user2Score":randomRoom.user2Score,"sira":randomRoom.sira});
+		io.to(users.getFromUsername(randomRoom.user2).socketId).emit("createGame",{"size":randomRoom.size,"user1":randomRoom.user1,"user2":randomRoom.user2,"user1Score":randomRoom.user1Score,"user2Score":randomRoom.user2Score,"sira":randomRoom.sira});
+		this.user1 = undefined;
+		this.user2 = undefined;
+		console.log("dsada");
+	}
+}
 var roomNode = function(){
 	this.code = undefined;
 	this.user1 = undefined;
@@ -310,20 +354,17 @@ var bl = function(){
 		}
 	}
 }
-function createNewCode(uzunluk) {
-	maske = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-	var sonuc = '';
-	for (var i = uzunluk; i > 0; --i){
-		sonuc += maske[Math.floor(Math.random() * maske.length)];
+function createNewCode() {
+	var code = Math.floor(Math.random() * 999);
+	if(rooms.getFromCode(code) != undefined){
+		return createNewCode();
 	}
-	if(rooms.getFromCode(sonuc) != undefined){
-		return createNewCode(uzunluk);
-	}
-	return sonuc;
+	return code;
 }
 var io = require("socket.io").listen(server);
 var users = new userBl();
 var rooms = new roomBl();
+var random = new randomPlay();
 io.sockets.on("connection",function(socket){
 	socket.on("login",function(data){
 		var username = data.username;
@@ -332,12 +373,24 @@ io.sockets.on("connection",function(socket){
 		}
 		else{
 			var socketId = socket.id;
-			if(users.getFromUsername(username) || users.getFromSocketId(socketId)){
+			var newUsername = "";
+			for(var i=0;i<data.username.length;i++){
+				if(data.username.charAt(i) == "<" | data.username.charAt(i) == ">" | data.username.charAt(i) == "/" | data.username.charAt(i) == "\\"){
+					
+				}
+				else{
+					newUsername = newUsername + data.username.charAt(i);
+				}
+			}
+			if(newUsername.length == 0){
+				io.to(socket.id).emit("alert",{"message":"Kullanıcı adı boş geçilemez!"});
+			}
+			else if(users.getFromUsername(newUsername) || users.getFromSocketId(socketId)){
 				io.to(socketId).emit("login",{"code":1});
 			}
 			else{
-				users.insert(username,socketId);
-				io.to(socketId).emit("login",{"code":0,"username":username});
+				users.insert(newUsername,socketId);
+				io.to(socketId).emit("login",{"code":0,"username":newUsername});
 			}
 		}
 	});
@@ -346,7 +399,7 @@ io.sockets.on("connection",function(socket){
 		var user = users.getFromSocketId(socketId);
 		if(user != undefined){
 			rooms.deleteFromUsername(user.username);
-			var newRoomCode = createNewCode(3);
+			var newRoomCode = createNewCode();
 			rooms.insert(user.username,data.size,newRoomCode);
 			var room = rooms.getFromCode(newRoomCode);
 			var game = new bl();
@@ -610,6 +663,16 @@ io.sockets.on("connection",function(socket){
 					io.to(users.getFromUsername(room.user1).socketId).emit("gameFinished",{"winner":room.user1});
 				}
 			}
+		}
+	});
+	socket.on("playRandom",function(data){
+		socketId = socket.id;
+		var user = users.getFromSocketId(socketId);
+		if(user != undefined){
+			random.fill(user);
+		}
+		else{
+			io.to(socketId).emit("alert",{"message":"Lütfen uygulamayı yeniden başlatın."});
 		}
 	});
 });

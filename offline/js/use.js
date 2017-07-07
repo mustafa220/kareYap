@@ -488,7 +488,6 @@ function process(line){
 			
 		}
 		else{
-			console.log("processing1");
 			processing({"x":x,"y":y,"direction":direction});
 		}
 	});
@@ -513,8 +512,6 @@ function processing(data){
 	}
 	var getNode = game.get(x,y);
 	if(direction == "rightLine"){
-		console.log(getNode.rightLine.active);
-		console.log(!getNode.rightLine.active);
 		if(!getNode.rightLine.active){
 			game.get(x,y).rightLine.active = true;
 			if(y < game.size + 1){
@@ -525,7 +522,6 @@ function processing(data){
 	}
 	else if(direction == "bottomLine"){
 		if(!getNode.bottomLine.active){
-			console.log("aktif değil : bottomLine = "+getNode.bottomLine.active);
 			game.get(x,y).bottomLine.active = true;
 			if(x < game.size + 1){
 				game.get(x,y+1).topLine.active = true;
@@ -575,8 +571,6 @@ function processing(data){
 							}
 			}
 		}
-		console.log(addScore);
-		console.log("game.sira1 = "+game.sira);
 		if(addScore > 0){
 			if(game.sira == 1){
 				game.user1Score += addScore;
@@ -596,7 +590,6 @@ function processing(data){
 				updateGame({"user1":game.user1,"user2":game.user2,"user1Score":game.user1Score,"user2Score":game.user2Score,"sira":game.sira,"x":x,"y":y,"direction":direction,"change":true,"scoredXy":scoredXy,"yourTurn":true});
 			}
 		}
-		console.log("game.sira2 = "+game.sira);
 		if((game.user1Score + game.user2Score) == (game.size + 1) * (game.size + 1)){
 			if(game.user1Score > game.user2Score){
 				gameFinished({"winner":game.user1});
@@ -673,7 +666,6 @@ function selectLine(count){
 			if(line.leftLine.active){}else{unsignedLines.push("leftLine");}
 			if(unsignedLines.length >= 3){
 				var direction = unsignedLines[Math.floor(Math.random() * unsignedLines.length)];
-				console.log("x : "+x+" - y : "+y+ " - direction : "+direction);
 				if(direction == "topLine"){
 					var newY = y-1;
 					var newLine = game.get(x,newY);
@@ -696,7 +688,6 @@ function selectLine(count){
 				if(newLine.bottomLine.active){}else{newUnsignedLines.push("bottomLine");}
 				if(newLine.leftLine.active){}else{newUnsignedLines.push("leftLine");}
 				if(newUnsignedLines.length >=3){
-					console.log("processing3");
 					processing({"x":x,"y":y,"direction":direction});
 					played = true;
 					break;
@@ -716,7 +707,6 @@ function selectLine(count){
 		if(line.leftLine.active){}else{unsignedLines.push("leftLine");}
 		if(unsignedLines.length >= 3){
 			var direction = unsignedLines[Math.floor(Math.random() * unsignedLines.length)];
-			console.log("x : "+x+" - y : "+y+ " - direction : "+direction);
 			if(direction == "topLine"){
 				var newY = y-1;
 				var newLine = game.get(x,newY);
@@ -739,7 +729,6 @@ function selectLine(count){
 			if(newLine.bottomLine.active){}else{newUnsignedLines.push("bottomLine");}
 			if(newLine.leftLine.active){}else{newUnsignedLines.push("leftLine");}
 			if(newUnsignedLines.length >=3){
-				console.log("processing2");
 				processing({"x":x,"y":y,"direction":direction});
 				played = true;
 			}
@@ -764,7 +753,6 @@ function selectLine(count){
 			if(line.leftLine.active){}else{unsignedLines.push("leftLine");}
 			if(unsignedLines.length == 2){
 				var direction = unsignedLines[Math.floor(Math.random() * unsignedLines.length)];
-				console.log("processing4");
 				processing({"x":x,"y":y,"direction":direction});
 				played = true;
 				break;

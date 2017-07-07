@@ -144,6 +144,7 @@ var bl = function(){
 		var topBoxesWidth = 0;
 		var topBoxexseight = 0;
 		if(windowWidth < windowHeight){
+			console.log(this.size);
 			boxSize = windowWidth/((this.size+1)*3+(this.size+2))*5;
 			gameWidth = "100%";
 			gameHeight = windowWidth;
@@ -323,6 +324,9 @@ $(document).ready(function(){
 	$(".quick-play").click(function(){
 		$(".anyMenu").hide();
 		$(".anyMenu:eq(3)").show();
+	});
+	$(".playRandom").click(function(){
+		socket.emit("playRandom",{});
 	});
 	$(".hakkinda").click(function(){
 		$(".anyMenu").hide();
