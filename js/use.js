@@ -3,6 +3,26 @@ var firstLogin = false;
 var logined = false;
 var windowWidth = $(window).width();
 var windowHeight = $(window).height();
+/*$(window).resize(function() {
+	windowWidth = $(window).width();
+	windowHeight = $(window).height();
+	$(document).ready(function(){
+		boxSize = windowWidth/((this.size+1)*3+(this.size+2))*5;
+		gameWidth = "100%";
+		gameHeight = windowWidth;
+		boardWidth = "100%";
+		boardHeight = ((windowHeight-windowWidth) / 2 ) + "px";
+		adWidth = "100%";
+		adHeight = boardHeight;
+		topBoxesWidth = "33.333%";
+		topBoxesHeight = "100%";
+		$(".dikCizgiActive").css({"width":(boxSize/5)+"px","height":boxSize+"px"});
+		$(".dikCizgiDeActive").css({"width":(boxSize/5)+"px","height":boxSize+"px"});
+		$(".yanCizgiActive").css({"width":boxSize+"px","height":(boxSize/5)+"px"});
+		$(".yanCizgiDeActive").css({"width":boxSize+"px","height":(boxSize/5)+"px"});
+		$(".emptyBox").css({"width":((boxSize/5)*3)+"px","height":((boxSize/5)*3)+"px"});
+	});
+});      */
 /*
 	anyMenu
 		0 : loginFrm
@@ -144,7 +164,6 @@ var bl = function(){
 		var topBoxesWidth = 0;
 		var topBoxexseight = 0;
 		if(windowWidth < windowHeight){
-			console.log(this.size);
 			boxSize = windowWidth/((this.size+1)*3+(this.size+2))*5;
 			gameWidth = "100%";
 			gameHeight = windowWidth;

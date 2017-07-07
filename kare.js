@@ -15,15 +15,15 @@ var randomPlay = function(){
 		if(this.user1 == undefined){
 			this.user1 = user;
 			console.log("user1 undefined");
+			if(this.user1 != undefined & this.user2 != undefined){
+				this.play();
+			}
 		}
 		else if(this.user2 == undefined){
 			this.user2 = user;
-			console.log("user2 undefined");
-		}
-		if(this.user1 != undefined & this.user2 != undefined){
-			this.play();
-			console.log("playing");
-			this.fill(user);
+			if(this.user1 != undefined & this.user2 != undefined){
+				this.play();
+			}
 		}
 	}
 	this.play = function(){
@@ -45,7 +45,6 @@ var randomPlay = function(){
 		io.to(users.getFromUsername(randomRoom.user2).socketId).emit("createGame",{"size":randomRoom.size,"user1":randomRoom.user1,"user2":randomRoom.user2,"user1Score":randomRoom.user1Score,"user2Score":randomRoom.user2Score,"sira":randomRoom.sira});
 		this.user1 = undefined;
 		this.user2 = undefined;
-		console.log("dsada");
 	}
 }
 var roomNode = function(){
