@@ -324,8 +324,6 @@ $(document).ready(function(){
 	$(".quick-play").click(function(){
 		$(".anyMenu").hide();
 		$(".anyMenu:eq(3)").show();
-	});
-	$(".playRandom").click(function(){
 		socket.emit("playRandom",{});
 	});
 	$(".hakkinda").click(function(){

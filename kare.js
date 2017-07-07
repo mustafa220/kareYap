@@ -14,20 +14,16 @@ var randomPlay = function(){
 	this.fill = function(user){
 		if(this.user1 == undefined){
 			this.user1 = user;
-			if(this.user2 == undefined){
-				return false;
-			}
+			console.log("user1 undefined");
 		}
 		else if(this.user2 == undefined){
 			this.user2 = user;
-			if(this.user1 == undefined){
-				return false;
-			}
+			console.log("user2 undefined");
 		}
 		if(this.user1 != undefined & this.user2 != undefined){
 			this.play();
+			console.log("playing");
 			this.fill(user);
-			return true;
 		}
 	}
 	this.play = function(){
