@@ -362,9 +362,8 @@ $(document).ready(function(){
 	});
 	$(".turn-offline").click(function(){
 		if(typeof(Android) !== "undefined"){
-			Android.Toast("Offline Moda Geçiliyor");
+			Android.turnOffline();
 		}
-		window.location="file:///android_asset/offline/index.html";
 	});
 });
 socket.on("waitFor",function(data){
