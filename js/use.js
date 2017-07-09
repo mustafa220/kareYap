@@ -360,6 +360,11 @@ $(document).ready(function(){
 		$(".anyMenu").hide();
 		$(".anyMenu:eq(1)").show();
 	});
+	$(".turn-offline").click(function(){
+		if(typeof(Android) !== "undefined"){
+			Android.turnOffline();
+		}
+	});
 });
 socket.on("waitFor",function(data){
 	$(document).ready(function(){
@@ -370,6 +375,8 @@ socket.on("waitFor",function(data){
 	});
 });
 socket.on("createGame",function(data){
+	$(".createdCode").css("display","none");
+	$(".createdCode").html("");
 	var game = new bl();
 	game.set(data.size);
 	game.create();
@@ -418,7 +425,7 @@ socket.on("updateGame",function(data){
 	if(data.yourTurn){
 		player.play();
 		player.duration = 0;
-		if(typeof(Android) !== undefined){
+		if(typeof(Android) !== "undefined"){
 			Android.playSound();
 		}
 	}
