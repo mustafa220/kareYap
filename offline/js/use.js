@@ -317,9 +317,8 @@ $(document).ready(function(){
 		$(".anyMenu:eq(1)").show();
 	});
 	$(".turn-online").click(function(){
-		if(typeof(Android) !== "undefined"){
-			Android.turnOnline();
-		}
+		Android.Toast("Online Moda Geçiliyor");
+		window.location="http://kareyap.herokuapp.com/";
 	});
 });
 var game = undefined;
