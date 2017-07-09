@@ -364,7 +364,8 @@ $(document).ready(function(){
 socket.on("waitFor",function(data){
 	$(document).ready(function(){
 		var code = data.code;
-		$(".createdCode").val(code);
+		$(".createdCode").css("display","block");
+		$(".createdCode").html("Odanızın Kodu : "+code);
 		alert("Oyun oluşturuldu. Rakibin katıldığında oyun başlayacak");
 	});
 });
@@ -417,7 +418,7 @@ socket.on("updateGame",function(data){
 	if(data.yourTurn){
 		player.play();
 		player.duration = 0;
-		if(Android != null & Android != undefined){
+		if(typeof(Android) !== undefined){
 			Android.playSound();
 		}
 	}

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Admin Panel</title>
+	<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+	<script type="text/javascript" src="/js/jquery.js"></script>
+	<script type="text/javascript">
+		var socket = io.connect();
+		$(document).ready(function(){
+			$("button").click(function(){
+				var kod = $(".kod").val();
+				socket.emit("adminBilgiCek",{"kod":kod});
+			});
+		});
+		socket.on("bilgiler",function(data){
+			$(document).ready(function(){
+				var rooms = data.rooms;
+				var users = data.users;
+				var append1 = "<h2>Odalar : </h2>";
+				var temp = rooms.root;
+				while(temp != undefined){
+					append1 = append1 + temp.code + " -- user1 : "+temp.user1+ " -- user2 : "+temp.user2+ "<br />";
+					temp = temp.next;
+				}
+				
+				var append2 = "<h2>Oyuncular : </h2>";
+				var temp = users.root;
+				while(temp != undefined){
+					append2 = append2 + temp.username + "<br />";
+					temp = temp.next;
+				}
+				$(".bilgiler").html(append1+append2);
+			});
+		});
+	</script>
+</head>
+<body>
+	<input type="text" name="kod" class="kod"/> <br />
+	<button>Bilgileri Çek</button>
+	<div class="bilgiler">
+		
+	</div>
+</body>
+</html>

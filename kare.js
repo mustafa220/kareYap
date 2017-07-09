@@ -1,11 +1,9 @@
 var express = require("express");
 var app = express();
-
 app.use("/js",express.static(__dirname+"/js"));
 app.use("/css",express.static(__dirname+"/css"));
 app.use("/pages",express.static(__dirname+"/pages"));
 app.use("/files",express.static(__dirname+"/files"));
-
 var server = app.listen(process.env.PORT || 80);
 console.log("listening on port "+(process.env.PORT || 80) );
 var randomPlay = function(){
@@ -14,7 +12,6 @@ var randomPlay = function(){
 	this.fill = function(user){
 		if(this.user1 == undefined){
 			this.user1 = user;
-			console.log("user1 undefined");
 			if(this.user1 != undefined & this.user2 != undefined){
 				this.play();
 			}
@@ -45,6 +42,30 @@ var randomPlay = function(){
 		io.to(users.getFromUsername(randomRoom.user2).socketId).emit("createGame",{"size":randomRoom.size,"user1":randomRoom.user1,"user2":randomRoom.user2,"user1Score":randomRoom.user1Score,"user2Score":randomRoom.user2Score,"sira":randomRoom.sira});
 		this.user1 = undefined;
 		this.user2 = undefined;
+	}
+	this.deleteFromUsername = function(username){
+		if(this.user1 != undefined){
+			if(this.user1.username == username){
+				this.user1 = undefined;
+			}
+		}
+		if(this.user2 != undefined){
+			if(this.user2.username == undefined){
+				this.user2 = undefined;
+			}
+		}
+	}
+	this.deleteFromSocketId = function(socketId){
+		if(this.user1 != undefined){
+			if(this.user1.socketId == socketId){
+				this.user1 = undefined;
+			}
+		}
+		if(this.user2 != undefined){
+			if(this.user2.socketId == socketId){
+				this.user2 = undefined;
+			}
+		}
 	}
 }
 var roomNode = function(){
@@ -360,8 +381,13 @@ var io = require("socket.io").listen(server);
 var users = new userBl();
 var rooms = new roomBl();
 var random = new randomPlay();
+var bakim = false;
 io.sockets.on("connection",function(socket){
 	socket.on("login",function(data){
+		if(bakim == true){
+			io.to(socket.id).emit("bakim",{"message":"Oyun şu an bakımdadır. Lütfen daha sonra tekrar deneyin."});
+			return false;
+		}
 		var username = data.username;
 		if(username.length == 0){
 			io.to(socket.id).emit("alert",{"message":"Kullanıcı adı boş geçilemez!"});
@@ -370,7 +396,7 @@ io.sockets.on("connection",function(socket){
 			var socketId = socket.id;
 			var newUsername = "";
 			for(var i=0;i<data.username.length;i++){
-				if(data.username.charAt(i) == "<" | data.username.charAt(i) == ">" | data.username.charAt(i) == "/" | data.username.charAt(i) == "\\"){
+				if(data.username.charAt(i) == "<" | data.username.charAt(i) == ">" | data.username.charAt(i) == "/" | data.username.charAt(i) == "\\"  | data.username.charAt(i) == " "){
 					
 				}
 				else{
@@ -390,6 +416,10 @@ io.sockets.on("connection",function(socket){
 		}
 	});
 	socket.on("createNewGameFriend",function(data){
+		if(bakim == true){
+			io.to(socket.id).emit("bakim",{"message":"Oyun şu an bakımdadır. Lütfen daha sonra tekrar deneyin."});
+			return false;
+		}
 		socketId = socket.id;
 		var user = users.getFromSocketId(socketId);
 		if(user != undefined){
@@ -412,6 +442,10 @@ io.sockets.on("connection",function(socket){
 		}
 	});
 	socket.on("loginRequest",function(data){
+		if(bakim == true){
+			io.to(socket.id).emit("bakim",{"message":"Oyun şu an bakımdadır. Lütfen daha sonra tekrar deneyin."});
+			return false;
+		}
 		socketId = socket.id;
 		var user = users.getFromSocketId(socketId);
 		if(user == undefined){
@@ -431,6 +465,10 @@ io.sockets.on("connection",function(socket){
 		}
 	});
 	socket.on("process",function(data){
+		if(bakim == true){
+			io.to(socket.id).emit("bakim",{"message":"Oyun şu an bakımdadır. Lütfen daha sonra tekrar deneyin."});
+			return false;
+		}
 		var x = data.x;
 		var y = data.y;
 		var direction = data.direction;
@@ -580,6 +618,10 @@ io.sockets.on("connection",function(socket){
 		
 	});
 	socket.on("lineOver",function(data){
+		if(bakim == true){
+			io.to(socket.id).emit("bakim",{"message":"Oyun şu an bakımdadır. Lütfen daha sonra tekrar deneyin."});
+			return false;
+		}
 		var x = data.x;
 		var y = data.y;
 		var direction = data.direction;
@@ -612,6 +654,10 @@ io.sockets.on("connection",function(socket){
 		}
 	});
 	socket.on("lineOut",function(data){
+		if(bakim == true){
+			io.to(socket.id).emit("bakim",{"message":"Oyun şu an bakımdadır. Lütfen daha sonra tekrar deneyin."});
+			return false;
+		}
 		var x = data.x;
 		var y = data.y;
 		var direction = data.direction;
@@ -643,24 +689,11 @@ io.sockets.on("connection",function(socket){
 			io.to(users.getFromUsername(controlUser).socketId).emit("lineOuted",data);
 		}
 	});
-	socket.on("disconnect",function(){
-		var socketId = socket.id;
-		user = users.getFromSocketId(socketId);
-		if(user != undefined){
-			users.deleteFromSocketId(socketId);
-			var room = rooms.getFromUsername(user.username);
-			if(room != undefined){
-				rooms.deleteFromUsername(user.username);
-				if(user.username == room.user1){
-					io.to(users.getFromUsername(room.user2).socketId).emit("gameFinished",{"winner":room.user2});
-				}
-				else if(user.username == room.user2){
-					io.to(users.getFromUsername(room.user1).socketId).emit("gameFinished",{"winner":room.user1});
-				}
-			}
-		}
-	});
 	socket.on("playRandom",function(data){
+		if(bakim == true){
+			io.to(socket.id).emit("bakim",{"message":"Oyun şu an bakımdadır. Lütfen daha sonra tekrar deneyin."});
+			return false;
+		}
 		socketId = socket.id;
 		var user = users.getFromSocketId(socketId);
 		if(user != undefined){
@@ -670,7 +703,42 @@ io.sockets.on("connection",function(socket){
 			io.to(socketId).emit("alert",{"message":"Lütfen uygulamayı yeniden başlatın."});
 		}
 	});
+	socket.on("adminBilgiCek",function(data){
+		var kod = data.kod;
+		if(kod == "325375"){
+			io.to(socket.id).emit("bilgiler",{"rooms":rooms,"users":users});
+		}
+	});
+	socket.on("disconnect",function(){
+		if(bakim == true){
+			io.to(socket.id).emit("alert",{"message":"Oyun şu an bakımdadır. Lütfen daha sonra tekrar deneyin."});
+			return false;
+		}
+		var socketId = socket.id;
+		user = users.getFromSocketId(socketId);
+		if(user != undefined){
+			users.deleteFromSocketId(socketId);
+			random.deleteFromSocketId(socketId);
+			var room = rooms.getFromUsername(user.username);
+			if(room != undefined){
+				rooms.deleteFromUsername(user.username);
+				if(user.username == room.user1){
+					if(room.user2 != undefined){
+						io.to(users.getFromUsername(room.user2).socketId).emit("gameFinished",{"winner":room.user2});
+					}
+				}
+				else if(user.username == room.user2){
+					if(room.user1 != undefined){
+						io.to(users.getFromUsername(room.user1).socketId).emit("gameFinished",{"winner":room.user1});
+					}
+				}
+			}
+		}
+	});
 });
 app.get("/",function(req,res){
 	res.sendFile(__dirname+"/pages/index.html");
+});
+app.get("/admin",function(req,res){
+	res.sendFile(__dirname+"/pages/admin.html");
 });
