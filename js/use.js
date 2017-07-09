@@ -361,9 +361,7 @@ $(document).ready(function(){
 		$(".anyMenu:eq(1)").show();
 	});
 	$(".turn-offline").click(function(){
-		if(typeof(Android) !== "undefined"){
-			Android.turnOffline();
-		}
+		Android.turnOffline();
 	});
 });
 socket.on("waitFor",function(data){

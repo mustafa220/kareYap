@@ -316,6 +316,11 @@ $(document).ready(function(){
 		$(".anyMenu").hide();
 		$(".anyMenu:eq(1)").show();
 	});
+	$(".turn-online").click(function(){
+		if(typeof(Android) !== "undefined"){
+			Android.turnOnline();
+		}
+	});
 });
 var game = undefined;
 function createGame(data,user2IsRobot){
