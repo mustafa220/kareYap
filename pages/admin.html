@@ -7,12 +7,6 @@
 	<script type="text/javascript" src="/js/jquery.js"></script>
 	<script type="text/javascript">
 		var socket = io.connect();
-		$(document).ready(function(){
-			$("button").click(function(){
-				var kod = $(".kod").val();
-				socket.emit("adminBilgiCek",{"kod":kod});
-			});
-		});
 		socket.on("bilgiler",function(data){
 			$(document).ready(function(){
 				var rooms = data.rooms;
@@ -33,11 +27,33 @@
 				$(".bilgiler").html(append1+append2);
 			});
 		});
+		$(document).ready(function(){
+			$(".giris").click(function(){
+				socket.emit("adminGiris",{"kod":$(".kod").val()});
+			});
+			$(".bilgiCek").click(function(){
+				socket.emit("adminBilgiCek",{});
+			});
+			$(".gonder").click(function(){
+				socket.emit("adminAlert",{"message":$(".message").val()});
+			});
+			$(".bakimaAl").click(function(){
+				socket.emit("bakimaAl",{});
+			});
+			$(".bakimdanCikar").click(function(){
+				socket.emit("bakimdanCikar",{});
+			});
+		});
 	</script>
 </head>
 <body>
 	<input type="text" name="kod" class="kod"/> <br />
-	<button>Bilgileri Çek</button>
+	<button class="giris">Giriş</button><br />
+	<button class="bilgiCek">Bilgi Çek</button><br />
+	<textarea name="message" placeholder="Oyunculara bir mesaj gönder" class="message"></textarea><br />
+	<button class="gonder">Gönder</button> <br />
+	<button class="bakimaAl">Oyunu Bakıma Al</button> <br />
+	<button class="bakimdanCikar">Oyunu Bakımdan Çıkar</button> <br />
 	<div class="bilgiler">
 		
 	</div>

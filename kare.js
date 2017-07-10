@@ -43,6 +43,18 @@ var randomPlay = function(){
 		this.user1 = undefined;
 		this.user2 = undefined;
 	}
+	this.cancelRandom = function(user){
+		if(this.user1 != undefined){
+			if(this.user1.username == user.username){
+				this.user1 = undefined;
+			}
+		}
+		if(this.user2 != undefined){
+			if(this.user2.username == user.username){
+				this.user2 = undefined;
+			}
+		}
+	}
 	this.deleteFromUsername = function(username){
 		if(this.user1 != undefined){
 			if(this.user1.username == username){
@@ -382,6 +394,7 @@ var users = new userBl();
 var rooms = new roomBl();
 var random = new randomPlay();
 var bakim = false;
+var adminSocketId = "";
 io.sockets.on("connection",function(socket){
 	socket.on("login",function(data){
 		if(bakim == true){
@@ -465,10 +478,6 @@ io.sockets.on("connection",function(socket){
 		}
 	});
 	socket.on("process",function(data){
-		if(bakim == true){
-			io.to(socket.id).emit("bakim",{"message":"Oyun şu an bakımdadır. Lütfen daha sonra tekrar deneyin."});
-			return false;
-		}
 		var x = data.x;
 		var y = data.y;
 		var direction = data.direction;
@@ -703,17 +712,39 @@ io.sockets.on("connection",function(socket){
 			io.to(socketId).emit("alert",{"message":"Lütfen uygulamayı yeniden başlatın."});
 		}
 	});
+	socket.on("cancelRandom",function(data){
+		var user = users.getFromSocketId(socket.id);
+		if(user != undefined){
+			random.cancelRandom(user);
+		}
+	});
+	socket.on("adminGiris",function(data){
+		if(data.kod =="325375"){
+			adminSocketId = socket.id;
+		}
+	});
 	socket.on("adminBilgiCek",function(data){
-		var kod = data.kod;
-		if(kod == "325375"){
+		if(socket.id == adminSocketId){
 			io.to(socket.id).emit("bilgiler",{"rooms":rooms,"users":users});
 		}
 	});
-	socket.on("disconnect",function(){
-		if(bakim == true){
-			io.to(socket.id).emit("alert",{"message":"Oyun şu an bakımdadır. Lütfen daha sonra tekrar deneyin."});
-			return false;
+	socket.on("adminAlert",function(data){
+		if(socket.id == adminSocketId){
+			var message = data.message;
+			socket.broadcast.emit("alert",{"message":message});
 		}
+	});
+	socket.on("bakimaAl",function(data){
+		if(socket.id == adminSocketId){
+			bakim = true;
+		}
+	});
+	socket.on("bakimdanCikar",function(data){
+		if(socket.id == adminSocketId){
+			bakim = false;
+		}
+	});
+	socket.on("disconnect",function(){
 		var socketId = socket.id;
 		user = users.getFromSocketId(socketId);
 		if(user != undefined){

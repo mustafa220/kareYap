@@ -3,6 +3,12 @@ var firstLogin = false;
 var logined = false;
 var windowWidth = $(window).width();
 var windowHeight = $(window).height();
+if(typeof(Android) != "undefined"){
+	var version = "1.0";
+	if(Android.getVersion() != version){
+		alert("Lütfen uygulamanızı güncelleyiniz.");
+	}
+}
 /*$(window).resize(function() {
 	windowWidth = $(window).width();
 	windowHeight = $(window).height();
@@ -360,11 +366,24 @@ $(document).ready(function(){
 		$(".anyMenu").hide();
 		$(".anyMenu:eq(1)").show();
 	});
+	$(".cancelRandom").click(function(){
+		socket.emit("cancelRandom",{});
+	});
 	$(".turn-offline").click(function(){
 		if(typeof(Android) !== "undefined"){
 			Android.turnOffline();
 		}
 	});
+});
+socket.on("bakim",function(data){
+	alert(data.message);
+	$(".anyMenu").hide();
+	if(logined == true){
+		$(".anyMenu:eq(1)").show();
+	}
+	else{
+		$(".anyMenu:eq(0)").show();
+	}
 });
 socket.on("waitFor",function(data){
 	$(document).ready(function(){
