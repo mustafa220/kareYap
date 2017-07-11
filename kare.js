@@ -396,6 +396,7 @@ var random = new randomPlay();
 var bakim = false;
 var adminSocketId = "";
 io.sockets.on("connection",function(socket){
+	console.log("connected . . .");
 	socket.on("login",function(data){
 		if(bakim == true){
 			io.to(socket.id).emit("bakim",{"message":"Oyun şu an bakımdadır. Lütfen daha sonra tekrar deneyin."});
@@ -719,6 +720,7 @@ io.sockets.on("connection",function(socket){
 		}
 	});
 	socket.on("adminGiris",function(data){
+		console.log(data);
 		if(data.kod =="325375"){
 			adminSocketId = socket.id;
 		}
