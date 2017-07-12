@@ -370,9 +370,9 @@ $(document).ready(function(){
 		socket.emit("cancelRandom",{});
 	});
 	$(".turn-offline").click(function(){
-		/*if(typeof(Android) !== "undefined"){
+		if(typeof(Android) !== "undefined"){
 			Android.turnOffline();
-		}*/
+		}
 	});
 });
 socket.on("bakim",function(data){
