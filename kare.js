@@ -25,7 +25,7 @@ var randomPlay = function(){
 	}
 	this.play = function(){
 		var randomRoomCode = createNewCode();
-		var sizes = new Array(5,7,11,13);
+		var sizes = new Array(5,7,11);
 		rooms.insert(this.user1.username,sizes[Math.floor(Math.random() * sizes.length)],randomRoomCode);
 		var randomRoom = rooms.getFromCode(randomRoomCode);
 		rooms.deleteFromUsername(this.user2.username);
@@ -434,25 +434,30 @@ io.sockets.on("connection",function(socket){
 			io.to(socket.id).emit("bakim",{"message":"Oyun şu an bakımdadır. Lütfen daha sonra tekrar deneyin."});
 			return false;
 		}
-		socketId = socket.id;
-		var user = users.getFromSocketId(socketId);
-		if(user != undefined){
-			rooms.deleteFromUsername(user.username);
-			var newRoomCode = createNewCode();
-			rooms.insert(user.username,data.size,newRoomCode);
-			var room = rooms.getFromCode(newRoomCode);
-			var game = new bl();
-			game.set(data.size);
-			game.create();
-			game.first();
-			room.game = game;
-			if(game == undefined){
-				return false;
+		if(data.size == 3 | data.size == 5 | data.size == 7 | data.size == 9 | data.size == 13){
+			socketId = socket.id;
+			var user = users.getFromSocketId(socketId);
+			if(user != undefined){
+				rooms.deleteFromUsername(user.username);
+				var newRoomCode = createNewCode();
+				rooms.insert(user.username,data.size,newRoomCode);
+				var room = rooms.getFromCode(newRoomCode);
+				var game = new bl();
+				game.set(data.size);
+				game.create();
+				game.first();
+				room.game = game;
+				if(game == undefined){
+					return false;
+				}
+				io.to(socketId).emit("waitFor",{"code":newRoomCode});
 			}
-			io.to(socketId).emit("waitFor",{"code":newRoomCode});
+			else{
+				io.to(socketId).emit("alert",{"message":"Lütfen uygulamayı yeniden başlatın."});
+			}
 		}
 		else{
-			io.to(socketId).emit("alert",{"message":"Lütfen uygulamayı yeniden başlatın."});
+			io.to(socket.id).emit("alert",{"message":"Karenin boyutu şunlardan biri olmalıdır : 3, 5, 7, 9, 11, 13"});
 		}
 	});
 	socket.on("loginRequest",function(data){
