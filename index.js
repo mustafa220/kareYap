@@ -12,13 +12,13 @@ var randomPlay = function(){
 	this.fill = function(user){
 		if(this.user1 == undefined){
 			this.user1 = user;
-			if(this.user1 != undefined & this.user2 != undefined){
+			if(this.user1 != undefined && this.user2 != undefined){
 				this.play();
 			}
 		}
 		else if(this.user2 == undefined){
 			this.user2 = user;
-			if(this.user1 != undefined & this.user2 != undefined){
+			if(this.user1 != undefined && this.user2 != undefined){
 				this.play();
 			}
 		}
